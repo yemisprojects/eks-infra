@@ -1,0 +1,28 @@
+pipeline{
+    agent any
+
+    string(name: 'TF_ACTION', defaultValue: 'apply', description: 'Valid choices are apply or destroy')
+
+    stages {
+        stage('Checkout'){
+            steps{
+                git branch: 'jenkins', url: 'https://github.com/yemisprojects/eks-infra.git'
+            }
+        }
+        stage('Terraform validate'){
+             steps{
+                 dir('eks/dev') {
+                      sh 'terraform --version && terraform init'
+                      sh 'terraform validate'
+                   }      
+             }
+        }
+        stage('Terraform action'){
+             steps{
+                 dir('eks/dev') {
+                      sh 'terraform ${params.TF_ACTION} --auto-approve'
+                   }      
+             }
+        }
+    }
+}
