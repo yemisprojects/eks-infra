@@ -26,7 +26,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
-          aws-region: us-east-1
+          aws-region: ${{ secrets.AWS_REGION }}
           role-session-name: GitHub-OIDC-TERRAFORM
 
       - name: Setup Terraform
@@ -45,8 +45,7 @@ jobs:
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
           AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME }}
           AWS_DYNAMODB_NAME: ${{ secrets.AWS_DYNAMODB_NAME }}
-        run: ''' terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}" \
-               -backend-config="region=${AWS_REGION}" -backend-config="dynamodb_table=${AWS_DYNAMODB_NAME}" '''
+        run: terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}" -backend-config="region=${AWS_REGION}" -backend-config="dynamodb_table=${AWS_DYNAMODB_NAME}"
 
       - name: Terraform Validate
         id: validate
