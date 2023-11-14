@@ -16,7 +16,8 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: eks_infra/dev
+        # working-directory: eks_infra/dev
+        working-directory: test_1
 
     steps:
       - name: Git checkout
@@ -45,9 +46,9 @@ jobs:
       - name: Terraform Init
         id: init
         env:
-          AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
-          AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME }}
-          AWS_DYNAMODB_NAME: ${{ secrets.AWS_DYNAMODB_NAME }}
+          AWS_BUCKET_NAME: ${{ secrets.EKS_TFSTATE_BUCKET }}
+          AWS_BUCKET_KEY_NAME: ${{ secrets.EKS_TFSTATE_KEY }}
+          AWS_DYNAMODB_NAME: ${{ secrets.EKS_TFSTATE_DB }}
         run: terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}" -backend-config="region=${AWS_REGION}" -backend-config="dynamodb_table=${AWS_DYNAMODB_NAME}"
 
       - name: Terraform Validate
