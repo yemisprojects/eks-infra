@@ -11,7 +11,7 @@ env:
   AWS_REGION: us-east-1
 
 jobs:
-  tf-destroy:
+  tf-destroy-pipeline:
     runs-on: ubuntu-latest
     defaults:
       run:
