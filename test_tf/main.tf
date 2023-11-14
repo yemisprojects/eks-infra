@@ -1,12 +1,3 @@
-
-resource "aws_instance" "test" {
-  ami           = data.aws_ami.my_lab_ami.id
-  instance_type = "t3.micro"
-  tags = {
-    "Name" = "test-Server"
-  }
-}
-
 terraform {
   required_version = ">= 1.0.0"
 
@@ -17,13 +8,12 @@ terraform {
     }
   }
 
-  # backend "s3" {
-  #   bucket = "eks-infra-tfstate-644802181882"
-  #   key    = "prod/eks-cluster/terraform.tfstate"
-  #   region = "us-east-1"
-
-  #   dynamodb_table = "prod-eks-cluster"
-  # }
+  backend "s3" {
+    # bucket = "cicd-tfstate-441155308134"
+    # key    = "dev/jenkins/terraform.tfstate"
+    # region = "us-east-1"
+    # dynamodb_table = "cicd-jenkins"
+  }
 
 }
 
@@ -31,8 +21,30 @@ provider "aws" {
   region = "us-east-1"
 }
 
+resource "aws_ssm_parameter" "foo" {
+  name  = "foo"
+  type  = "String"
+  value = "barr"
+}
 
-data "aws_ami" "my_lab_ami" {
+
+
+
+
+
+
+
+
+
+# resource "aws_instance" "test" {
+#   ami           = data.aws_ami.my_lab_ami.id
+#   instance_type = "t3.micro"
+#   tags = {
+#     "Name" = "test-Server"
+#   }
+# }
+
+/*data "aws_ami" "my_lab_ami" {
   most_recent = true #this is key to filtering for the right image, so only 1 image is returned
   owners      = ["amazon"]
 
@@ -66,4 +78,4 @@ data "aws_ami" "my_lab_ami" {
     values = ["available"]
   }
 
-}
+}*/

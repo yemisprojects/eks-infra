@@ -1,6 +1,6 @@
 
 ################################################################################
-# OUTPUTS eks_backend
+# Github actions variables
 ################################################################################
 output "eks_s3_bucket_id" {
   description = "Name of the bucket for S3 eks backend"
@@ -20,4 +20,9 @@ output "pipeline_s3_bucket_id" {
 output "pipeline_table_id" {
   description = "Name of dynamodb table for pipeline remote state"
   value       = module.pipeline_backend.table_id
+}
+
+output "github_role" {
+  description = "github actions role"
+  value       = aws_iam_role.github_role.arn
 }
