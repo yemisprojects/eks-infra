@@ -7,6 +7,8 @@ kubeconfig_*
 .terraform
 *less_modules
 practice_only
+xtest_1/
+xtest_2/
 
 #################################################################
 # Default .gitignore content for all terraform-aws-modules below
