@@ -1,4 +1,4 @@
-name: "Destroy entire infrastructure"
+name: "Terraform Destroy EKS"
 on:
   workflow_dispatch:
 
@@ -11,7 +11,7 @@ env:
   AWS_REGION: us-east-1
 
 jobs:
-  tf-destroy:
+  tf-destroy-eks:
     runs-on: ubuntu-latest
     defaults:
       run:
