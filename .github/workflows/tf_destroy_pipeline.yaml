@@ -1,4 +1,4 @@
-name: "Destroy entire infrastructure"
+name: "Terraform Destroy Jenkins Pipeline"
 on:
   workflow_dispatch:
 

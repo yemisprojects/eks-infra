@@ -1,4 +1,4 @@
-name: "Destroy entire infrastructure"
+name: "Terraform Destroy EKS"
 on:
   workflow_dispatch:
 
