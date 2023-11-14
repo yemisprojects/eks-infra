@@ -1,9 +1,5 @@
-name: "Terraform Destroy"
+name: "Destroy entire infrastructure"
 on:
-  # push:
-  #   branches:
-  #     - main
-  # pull_request:
   workflow_dispatch:
 
 permissions:
@@ -13,6 +9,7 @@ permissions:
 env:
   TF_LOG: INFO
   AWS_REGION: us-east-1
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -28,8 +25,10 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
-          aws-region: $AWS_REGION
+          aws-region: ${{ secrets.AWS_REGION }}
           role-session-name: GitHub-OIDC-TERRAFORM
+
+      - run: aws sts get-caller-identity
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -47,9 +46,7 @@ jobs:
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
           AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME }}
           AWS_DYNAMODB_NAME: ${{ secrets.AWS_DYNAMODB_NAME }}
-        # run: terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}" -backend-config="region=${AWS_REGION}"
-        run: ''' terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}" \
-               -backend-config="region=${AWS_REGION}" -backend-config="dynamodb_table=${AWS_DYNAMODB_NAME}" '''
+        run: terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}" -backend-config="region=${AWS_REGION}" -backend-config="dynamodb_table=${AWS_DYNAMODB_NAME}"
 
       - name: Terraform Validate
         id: validate
@@ -57,7 +54,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color
+        run: terraform plan -no-color -destroy
         if: github.event_name == 'pull_request'
         continue-on-error: true
 
