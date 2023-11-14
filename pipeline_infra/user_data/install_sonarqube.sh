@@ -5,7 +5,7 @@
 apt-get update
 apt-get install docker.io -y
 usermod -aG docker ubuntu 
-chmod 777 /var/run/docker.sock
+chmod 660 /var/run/docker.sock
 
 ################################################################################
 # RUN SONARQUBE - do not use passwords in github, demo purposes only
