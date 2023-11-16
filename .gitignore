@@ -9,6 +9,7 @@ kubeconfig_*
 practice_only
 xtest_1/
 xtest_2/
+install_jenkins_backup.sh
 
 #################################################################
 # Default .gitignore content for all terraform-aws-modules below
