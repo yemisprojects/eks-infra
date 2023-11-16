@@ -11,11 +11,6 @@ resource "helm_release" "argocd" {
   create_namespace = true
   timeout          = 3600
 
-  # values = [
-  #   "${file("./argocd_helm_values/values.yaml")}"
-  # ]
-
-
   set {
     name  = "server.service.type"
     value = "ClusterIP"

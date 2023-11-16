@@ -20,7 +20,6 @@ resource "aws_eks_node_group" "eks_ng_private" {
     max_size     = 2
   }
 
-  # Desired max percentage of unavailable worker nodes during node group update.
   update_config {
     max_unavailable = 1
   }
@@ -32,7 +31,6 @@ resource "aws_eks_node_group" "eks_ng_private" {
     aws_iam_role_policy_attachment.amazon_eks_cni_policy,
     aws_iam_role_policy_attachment.eks_amazon_ec2_container_registry_readonly,
     aws_iam_role_policy_attachment.eks_amazon_ssm_managed_instance_core,
-    # kubernetes_config_map_v1.aws_auth 
   ]
 
   # Allow external changes without Terraform plan difference
@@ -41,7 +39,6 @@ resource "aws_eks_node_group" "eks_ng_private" {
   }
 }
 
-#reused by karpenter
 resource "aws_iam_role" "eks_nodegroup_role" {
   name = "eks-nodegroup-role"
 

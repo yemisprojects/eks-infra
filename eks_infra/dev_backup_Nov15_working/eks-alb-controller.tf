@@ -7,11 +7,9 @@ resource "helm_release" "loadbalancer_controller" {
   chart      = "aws-load-balancer-controller"
   namespace  = "kube-system"
 
-  # Value changes based on your Region (Below is for us-east-1)
   set {
     name  = "image.repository"
     value = "602401143452.dkr.ecr.${var.aws_region}.amazonaws.com/amazon/aws-load-balancer-controller"
-    # Changes based on Region - This is for us-east-1 Additional Reference: https://docs.aws.amazon.com/eks/latest/userguide/add-ons-images.html
   }
 
   set {
@@ -76,7 +74,6 @@ resource "kubernetes_ingress_class_v1" "ingress_class_default" {
 data "http" "aws_load_balancer_controller_iam_policy" {
   url = "https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/main/docs/install/iam_policy.json"
 
-  # Optional request headers
   request_headers = {
     Accept = "application/json"
   }
@@ -95,7 +92,6 @@ locals {
 resource "aws_iam_role" "aws_load_balancer_controller_role" {
   name = "aws-load-balancer-controller-role"
 
-  # Terraform's "jsonencode" function converts a Terraform expression result to valid JSON syntax.
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
