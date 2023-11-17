@@ -119,7 +119,7 @@ data "http" "myip" {
 data "aws_availability_zones" "available" {}
 
 resource "aws_iam_role" "ec2" {
-  name = "ec2-pipeline-role"
+  name = "ec2-jenkins-role"
 
   assume_role_policy = <<POLICY
 {
