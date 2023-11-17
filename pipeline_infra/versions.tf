@@ -22,6 +22,10 @@ terraform {
 
   #   dynamodb_table = "prod-eks-cluster"
   # }
+
+  backend "s3" {}
+
+
 }
 
 provider "aws" {

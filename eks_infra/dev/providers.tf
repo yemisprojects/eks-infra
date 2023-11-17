@@ -27,6 +27,7 @@ terraform {
     }
   }
 
+  backend "s3" {}
   # backend "s3" {
   #   bucket = "eks-infra-tfstate-644802181882"
   #   key    = "prod/eks-cluster/terraform.tfstate"
