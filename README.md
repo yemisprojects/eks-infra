@@ -71,36 +71,31 @@ Below is a list of key resources deployed via Github Actions. For a complete lis
 5. Prometheus and Grafana
 
 ## How to access Grafanna
-An AWS load balancer controller was installed and used to expose Grafana service at Use the default credentials to access Grafana default credentials below.  
+An AWS load balancer controller was installed and used to expose the grafana service using the domain name you provided earlier. Go to your browser, provide the domain name and login with the default credentials below.  
 
 ```
 Username: admin
 Password: prom-operator
 ```
 
-Kubernets Dashboard ID that can be imported within grafana: `1860`
+You can import a Kubernetes Dashboard using this ID: `1860`
 
-## How to Access ArgoCD server 
-You can use port forwarding to access ArgoCD UI for initial configurations 
+## How to access ArgoCD UI 
+You can use port forwarding to [access ArgoCD UI](https://argo-cd.readthedocs.io/en/stable/getting_started/) for initial configuration
 
 ```
 kubectl port-forward svc/vproapp-service 8081:443
 ```
 
-The default username is `admin` and the default password can be obtained using the command below:
-`kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`
+The default username is `admin` and the default password can be obtained using the command below.
 
-Goto your browser on `https://localhost:8080` and login with the credential abobe
+```
+kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```
 
-Note: The ideal method to access ArgoCD UI is to expose the ArgoCD service using Ingrss but this requires a certificate. This is not covered in this project. See the ArgoCD [documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/) more information.
+Goto your browser using the forwared port `https://localhost:8081` and login with the credential above
 
-
-kubectl port-forward svc/argocd-server -n argocd 8082:80
-Ref: https://argo-cd.readthedocs.io/en/stable/getting_started/
-
-
-https://localhost:8080
-
+Note: The ideal method to access ArgoCD UI is to expose the ArgoCD service using Ingress but this requires a certificate. This is not covered in this project. See the ArgoCD [documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/) for more information.
 
 ## Possible Issues
 https://karpenter.sh/preview/troubleshooting/#webhooks
