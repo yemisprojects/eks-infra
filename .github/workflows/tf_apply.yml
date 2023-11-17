@@ -18,7 +18,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: pipeline_infra #eks_infra/dev
+        working-directory: pipeline_infra 
 
     steps:
       - name: Git checkout
@@ -47,7 +47,7 @@ jobs:
         env:
           AWS_BUCKET_NAME: ${{ secrets.CICD_TFSTATE_BUCKET }}
           AWS_DYNAMODB_NAME: ${{ secrets.CICD_TFSTATE_DB }}
-        run: terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=dev/jenkins/terraform.tfstate" -backend-config="region=${AWS_REGION}" -backend-config="dynamodb_table=${AWS_DYNAMODB_NAME}"
+        run: terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=terraform.tfstate" -backend-config="region=${AWS_REGION}" -backend-config="dynamodb_table=${AWS_DYNAMODB_NAME}"
 
       - name: Terraform Validate
         id: validate
@@ -138,7 +138,7 @@ jobs:
   #       env:
   #         AWS_BUCKET_NAME: ${{ secrets.EKS_TFSTATE_BUCKET }}
   #         AWS_DYNAMODB_NAME: ${{ secrets.EKS_TFSTATE_DB }}
-  #       run: terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=dev/eks/terraform.tfstate" -backend-config="region=${AWS_REGION}" -backend-config="dynamodb_table=${AWS_DYNAMODB_NAME}"
+  #       run: terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=terraform.tfstate" -backend-config="region=${AWS_REGION}" -backend-config="dynamodb_table=${AWS_DYNAMODB_NAME}"
 
   #     - name: Terraform Validate
   #       id: validate
