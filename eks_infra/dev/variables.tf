@@ -47,7 +47,7 @@ variable "vpc_enable_nat_gateway" {
 variable "environment" {
   description = "Environment name"
   type        = string
-  default     = "prod"
+  default     = "dev"
 }
 
 ################################################################################
