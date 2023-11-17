@@ -18,7 +18,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: eks_infra/dev
+        working-directory: pipeline_infra #eks_infra/dev
 
     steps:
       - name: Git checkout
@@ -110,7 +110,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: pipeline_infra
+        working-directory: eks_infra/dev #pipeline_infra
 
     steps:
       - name: Git checkout
