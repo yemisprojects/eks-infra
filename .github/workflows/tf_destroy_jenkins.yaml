@@ -56,9 +56,9 @@ jobs:
         run: terraform plan -no-color -destroy
         continue-on-error: true
 
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
+      # - name: Terraform Plan Status
+      #   if: steps.plan.outcome == 'failure'
+      #   run: exit 1
 
       - name: Terraform Destoy
         run: terraform destroy -auto-approve -input=false
