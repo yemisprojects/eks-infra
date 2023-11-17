@@ -49,10 +49,10 @@ The next step is to create the following github secrets in your  repository. Use
 
 Instructions to add the secrets to the repository can be found [here](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository).
 
-## How to Deploy resources via Github Actions
+## How to deploy resources via Github Actions
 
 1. Fork this repo and use the steps in the previous sections to update your github secrets
-2. **Required**: Update value of the `grafana_domain_name` variable in `eks/dev/variables.tf`' to your domain name
+2. **Required**: Update value of the `grafana_domain_name` variable in `eks/dev/variables.tf` to your domain name
 3. You can push your change directly to the main branch but to see the terraform 
 plan from a PR (pull request) perspective i suggest you create a new branch and check in the Terraform code with your change.
 4. Create a Pull Request (PR) in GitHub once you're ready to merge your code.
@@ -60,7 +60,7 @@ plan from a PR (pull request) perspective i suggest you create a new branch and 
 4. Once the PR is appropriately reviewed, the PR can be merged into your main branch.
 5. After merge, another GitHub Actions job will trigger from the main branch and deploy the infrastructure using Terraform.
 
-## Resources Deployed
+#### Resources deployed
 
 Below is a list of key resources deployed via Github Actions. For a complete list of all resources, see the [doc for terraform](https://github.com/yemisprojects/eks-infra/tree/main/eks_infra/dev#readme) in this repo.
 
@@ -70,9 +70,7 @@ Below is a list of key resources deployed via Github Actions. For a complete lis
 4. ArgoCD
 5. Prometheus and Grafana
 
-
-
-## How to Access grafanna
+## How to access Grafanna
 An AWS load balancer controller was installed and used to expose Grafana service at Use the default credentials to access Grafana default credentials below.  
 
 ```
