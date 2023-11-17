@@ -16,7 +16,7 @@ This repository contains the terraform code and github workflow used to automate
 - kubectl installed locally
 - Terraform installed locally
 
-## Github Initial setup (required)
+## Github initial setup (required)
 
 In addition to the above requirements, there are other prerequisite steps to deploy the resources and use the workflows from this repository in your AWS account. Most of these have been automated via terraform. 
 
@@ -41,18 +41,18 @@ Using the command above, terraform creates the following resources:
 
 The next step is to create the following github secrets in your  repository. Use the terraform output values from the previous step.
 
-    - `AWS_ROLE` : Federated IAM role to be utilized by Github actions
-    - `CICD_TFSTATE_BUCKET` : Bucket name for remote backed for jenkins remote backend
-    - `CICD_TFSTATE_DB` : DynamoDB table for state locking for Jenkins S3 backend
-    - `EKS_TFSTATE_BUCKET` : Bucket name for remote backed for jenkins remote backend
-    - `EKS_TFSTATE_DB` : DynamoDB table for state locking for Jenkins S3 backend
-    
+- `AWS_ROLE` : Federated IAM role to be utilized by Github actions
+- `CICD_TFSTATE_BUCKET` : Bucket name for remote backed for Jenkins instance
+- `CICD_TFSTATE_DB` : DynamoDB table for state locking for Jenkins instance
+- `EKS_TFSTATE_BUCKET` : Bucket name for remote backed for EKS cluster
+- `EKS_TFSTATE_DB` : DynamoDB table for state locking for EKS cluster
+
 Instructions to add the secrets to the repository can be found [here](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository).
 
 ## How to Deploy resources via Github Actions
 
-1. Fork this repo and use the steps in the previous section to update your github secrets
-2. **REQUIRED**: Update value of the `grafana_domain_name` variable in `eks/dev/variables.tf`' to your domain name
+1. Fork this repo and use the steps in the previous sections to update your github secrets
+2. **Required**: Update value of the `grafana_domain_name` variable in `eks/dev/variables.tf`' to your domain name
 3. You can push your change directly to the main branch but to see the terraform 
 plan from a PR (pull request) perspective i suggest you create a new branch and check in the Terraform code with your change.
 4. Create a Pull Request (PR) in GitHub once you're ready to merge your code.

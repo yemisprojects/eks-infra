@@ -43,7 +43,6 @@
     value = 1
   }
 
-  #nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms set in values.yaml
   depends_on = [
     helm_release.karpenter,
     kubernetes_config_map_v1.aws_auth,
@@ -180,11 +179,9 @@ resource "kubectl_manifest" "karpenter_node_template" {
       namespace: karpenter
     spec:
       subnetSelector:
-        #kubernetes.io/cluster/${var.cluster_name}: owned
         karpenter.sh/discovery: ${var.cluster_name}
       securityGroupSelector:
         kubernetes.io/cluster/${var.cluster_name}: owned
-        # added by default
   YAML
 
   depends_on = [
