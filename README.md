@@ -1,24 +1,21 @@
 # DevSecOps CI/CD with Jenkins and ArgoCD
 
 This repository contains the terraform code and github workflows used to automate the deployment of the infrastructure required to implement an end-to-end DevSecOps CI/CD pipeline to EKS. CI is implemented using Jenkins and CD via ArgoCD (GitOps). This repo is intended to be used with the two repositories listed below.
-- ..
-- ..
+- https://github.com/yemisprojects/eks-app
+- https://github.com/yemisprojects/kubernetes-manifests
 
 ## Infrastructure pipeline Architecture
 
 <img width="2159" alt="GitHub Actions CICD for Terraform" src="">
 
-
-# Required 
+# Prerequisites
 
 - Github account
 - AWS account (Note: This project does not fall under the free tier)
 - Domain (AWS R53 or third party)
 - kubectl Installed locally
-- AWS IAM credentials
 
-
-# GitHub Actions Workflow
+# GitHub workflow
 
 1. Fork this repo, create a new branch and check in the Terraform code.
 2. Create a Pull Request (PR) in GitHub once you're ready to merge your code.
@@ -36,11 +33,19 @@ Below is a list of key resources deployed via Github Actions. For a complete lis
 4. ArgoCD
 5. Prometheus and Grafana
 
-## Github and Terraform Initial setup
+## Github Initial setup (required)
 
-To use the workflows from this repository in your environment several prerequisite steps are required. Most of these have been automated via terraform which you will need to run locally.
+To use the workflows from this repository in your environment several prerequisite steps are required. Most of these have been automated via terraform which you will need to run locally. Run the commands below and note down the values of the output for the next step
 
-1. **Terraform State Location and DynamoDB for remote backend and state locking**
+```t
+cd github_setup && terraform init
+terraform fmt && terraform apply -auto-approve
+
+```
+
+The commands above creates the following resources: 
+
+1. **S3 buckets to store terraform's state & DynamoDB tables to lock the state**
 
     Terraform utilizes a [state file](https://www.terraform.io/language/state) to store information about the current state of your managed infrastructure and associated configuration. This file will need to be persisted between different runs of the workflow. The recommended approach is to store this file within S3 or other similar remote backend. To lock a write to the state file when in use a DynamoDB table is required.
 
@@ -48,11 +53,9 @@ To use the workflows from this repository in your environment several prerequisi
 
     An IAM identity will be required the pipeline to authenticate to AWS and carry out account. At a minimum, it requires permission to the S3 bucket, dynamoDB table (for remote backend) and to deploy the desired resources. See this [AWS blog](https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/) for more information. 
 
-3. **Add GitHub Secrets**
+#### Add GitHub Secrets
 
-    _Note: While the IAM role does not contain any secrets or credentials we still utilize GitHub Secrets as a convenient means to parameterize the identity information._
-
-    Create the following secrets on the repository:
+    Within your github repository, create the following secrets on the repository. Use the terraform output values from the previous terr.
 
     - `AWS_ROLE` : Federated IAM role to be utilized by Github actions
     - `CICD_TFSTATE_BUCKET` : Bucket name for remote backed for jenkins remote backend
@@ -62,13 +65,6 @@ To use the workflows from this repository in your environment several prerequisi
     
     Instructions to add the secrets to the repository can be found [here](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository).
 
-Except for the Github secrets the resources above can be created with terraform, run the commands below
-
-`cd github_setup && terraform init && terraform fmt && terraform apply -auto-approve`
-
-
-
-.....
 
 **REQUIRED**: 
 Update value of the grafana_domain_name variable in `eks/dev/variables.t`' to your domain name
@@ -76,14 +72,20 @@ Raise a PR and merge to main
 
 ## How to Access grafanna
 An AWS load balancer controller was installed and used to expose Grafana service at Use the default credentials to access Grafana default credentials below.  
+
+```
 Username: admin
 Password: prom-operator
+```
 
-Import Dashboard ID: 1860
+Kubernets Dashboard ID that can be imported within grafana: `1860`
 
 ## How to Access ArgoCD server 
 You can use port forwarding to access ArgoCD UI for initial configurations 
-`kubectl port-forward svc/vproapp-service 8081:443`
+
+```
+kubectl port-forward svc/vproapp-service 8081:443
+```
 
 The default username is `admin` and the default password can be obtained using the command below:
 `kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`

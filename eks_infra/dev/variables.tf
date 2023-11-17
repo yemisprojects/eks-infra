@@ -96,3 +96,9 @@ variable "grafana_domain_name" {
   default     = "monitoring.devopsprotech.com"
 
 }
+
+variable "secondary_eks_admin" {
+  description = "Name of second eks admin user"
+  type        = string
+  default     = "eksadmin1"
+}
