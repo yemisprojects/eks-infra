@@ -1,18 +1,18 @@
-name: "Terraform action"
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-permissions:
-      id-token: write # This is required for aws oidc connection
-      contents: read # This is required for actions/checkout
-      pull-requests: write # This is required for gh bot to comment PR
-env:
-  TF_LOG: INFO
-  AWS_REGION: "us-east-1"
+# name: "Terraform action"
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+# permissions:
+#       id-token: write # This is required for aws oidc connection
+#       contents: read # This is required for actions/checkout
+#       pull-requests: write # This is required for gh bot to comment PR
+# env:
+#   TF_LOG: INFO
+#   AWS_REGION: "us-east-1"
 
-jobs:
+# jobs:
   # deploy-pipeline:
   #   runs-on: ubuntu-latest
   #   defaults:

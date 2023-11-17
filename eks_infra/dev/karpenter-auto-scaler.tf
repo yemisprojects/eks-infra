@@ -47,7 +47,8 @@ resource "helm_release" "karpenter" {
   depends_on = [
     helm_release.karpenter,
     kubernetes_config_map_v1.aws_auth,
-    aws_eks_node_group.eks_ng_private
+    aws_eks_node_group.eks_ng_private,
+    aws_eks_cluster.eks_cluster
   ]
 
 }
@@ -162,7 +163,12 @@ resource "kubectl_manifest" "karpenter_provisioner" {
           name: my-provider
   YAML
 
-  depends_on = [helm_release.karpenter, kubernetes_config_map_v1.aws_auth]
+  depends_on = [
+    helm_release.karpenter,
+    kubernetes_config_map_v1.aws_auth,
+    aws_eks_cluster.eks_cluster,
+    aws_eks_node_group.eks_ng_private
+  ]
 }
 
 resource "kubectl_manifest" "karpenter_node_template" {
@@ -181,6 +187,10 @@ resource "kubectl_manifest" "karpenter_node_template" {
         # added by default
   YAML
 
-  # depends_on = [kubectl_manifest.karpenter_provisioner]
-  depends_on = [helm_release.karpenter, kubernetes_config_map_v1.aws_auth]
+  depends_on = [
+    helm_release.karpenter,
+    kubernetes_config_map_v1.aws_auth,
+    aws_eks_cluster.eks_cluster,
+    aws_eks_node_group.eks_ng_private
+  ]
 }
