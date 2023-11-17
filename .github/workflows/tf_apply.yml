@@ -28,7 +28,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: 'us-east-1'
           role-session-name: GitHub-OIDC-TERRAFORM
       
       - name: check iam identity
@@ -104,93 +104,93 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
 
-  deploy-eks:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-        working-directory: eks_infra/dev #pipeline_infra
+  # deploy-eks:
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       shell: bash
+  #       working-directory: eks_infra/dev #pipeline_infra
 
-    steps:
-      - name: Git checkout
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Git checkout
+  #       uses: actions/checkout@v3
 
-      - name: Configure AWS credentials from AWS account
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE }}
-          aws-region: ${{ secrets.AWS_REGION }}
-          role-session-name: GitHub-OIDC-TERRAFORM
+  #     - name: Configure AWS credentials from AWS account
+  #       uses: aws-actions/configure-aws-credentials@v2
+  #       with:
+  #         role-to-assume: ${{ secrets.AWS_ROLE }}
+  #         aws-region: 'us-east-1'
+  #         role-session-name: GitHub-OIDC-TERRAFORM
       
-      - name: check iam identity
-        run: aws sts get-caller-identity
+  #     - name: check iam identity
+  #       run: aws sts get-caller-identity
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+  #     - name: Setup Terraform
+  #       uses: hashicorp/setup-terraform@v2
 
-      - name: Terraform fmt
-        id: fmt
-        run: terraform fmt -check
-        continue-on-error: true
+  #     - name: Terraform fmt
+  #       id: fmt
+  #       run: terraform fmt -check
+  #       continue-on-error: true
 
-      - name: Terraform Init
-        id: init
-        env:
-          AWS_BUCKET_NAME: ${{ secrets.EKS_TFSTATE_BUCKET }}
-          AWS_DYNAMODB_NAME: ${{ secrets.EKS_TFSTATE_DB }}
-        run: terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=dev/eks/terraform.tfstate" -backend-config="region=${AWS_REGION}" -backend-config="dynamodb_table=${AWS_DYNAMODB_NAME}"
+  #     - name: Terraform Init
+  #       id: init
+  #       env:
+  #         AWS_BUCKET_NAME: ${{ secrets.EKS_TFSTATE_BUCKET }}
+  #         AWS_DYNAMODB_NAME: ${{ secrets.EKS_TFSTATE_DB }}
+  #       run: terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=dev/eks/terraform.tfstate" -backend-config="region=${AWS_REGION}" -backend-config="dynamodb_table=${AWS_DYNAMODB_NAME}"
 
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
+  #     - name: Terraform Validate
+  #       id: validate
+  #       run: terraform validate -no-color
 
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -no-color
-        if: github.event_name == 'pull_request'
-        continue-on-error: true
+  #     - name: Terraform Plan
+  #       id: plan
+  #       run: terraform plan -no-color
+  #       if: github.event_name == 'pull_request'
+  #       continue-on-error: true
 
-      - uses: actions/github-script@v6
-        if: github.event_name == 'pull_request'
-        env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const output = `#### Terraform Format and Style (EKS) 🖌\`${{ steps.fmt.outcome }}\`
-            #### Terraform Initialization (EKS) ⚙️\`${{ steps.init.outcome }}\`
-            #### Terraform Validation (EKS) 🤖\`${{ steps.validate.outcome }}\`
-            <details><summary>Validation Output</summary>
+  #     - uses: actions/github-script@v6
+  #       if: github.event_name == 'pull_request'
+  #       env:
+  #         PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+  #       with:
+  #         github-token: ${{ secrets.GITHUB_TOKEN }}
+  #         script: |
+  #           const output = `#### Terraform Format and Style (EKS) 🖌\`${{ steps.fmt.outcome }}\`
+  #           #### Terraform Initialization (EKS) ⚙️\`${{ steps.init.outcome }}\`
+  #           #### Terraform Validation (EKS) 🤖\`${{ steps.validate.outcome }}\`
+  #           <details><summary>Validation Output</summary>
 
-            \`\`\`\n
-            ${{ steps.validate.outputs.stdout }}
-            \`\`\`
+  #           \`\`\`\n
+  #           ${{ steps.validate.outputs.stdout }}
+  #           \`\`\`
 
-            </details>
+  #           </details>
 
-            #### Terraform Plan (EKS) 📖\`${{ steps.plan.outcome }}\`
+  #           #### Terraform Plan (EKS) 📖\`${{ steps.plan.outcome }}\`
 
-            <details><summary>Show Plan</summary>
+  #           <details><summary>Show Plan</summary>
 
-            \`\`\`\n
-            ${process.env.PLAN}
-            \`\`\`
+  #           \`\`\`\n
+  #           ${process.env.PLAN}
+  #           \`\`\`
 
-            </details>
+  #           </details>
 
-            *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+  #           *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
 
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: output
-            })
+  #           github.rest.issues.createComment({
+  #             issue_number: context.issue.number,
+  #             owner: context.repo.owner,
+  #             repo: context.repo.repo,
+  #             body: output
+  #           })
 
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
+  #     - name: Terraform Plan Status
+  #       if: steps.plan.outcome == 'failure'
+  #       run: exit 1
 
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
+  #     - name: Terraform Apply
+  #       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  #       run: terraform apply -auto-approve -input=false
