@@ -26,15 +26,15 @@ variable "vpc_public_subnets" {
   default     = ["172.17.1.0/24", "172.17.2.0/24"]
 }
 
-variable "instance_type" {
-  description = "ec2 instance type"
-  type        = string
-  default     = "t3.large"
-}
+# variable "instance_type" {
+#   description = "ec2 instance type"
+#   type        = string
+#   default     = "t3.large"
+# }
 
-#access with SSM
-variable "ec2_key_name" {
-  type        = string
-  description = "Name of ec2 key"
-  default     = ""
-}
+# #access with SSM
+# variable "ec2_key_name" {
+#   type        = string
+#   description = "Name of ec2 key"
+#   default     = ""
+# }
