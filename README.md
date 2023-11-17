@@ -37,7 +37,7 @@ Using the command above, terraform creates the following resources:
 
     An IAM Role will be via by the pipeline using OIDC to authenticate to AWS and carry out actions in your AWS account. At a minimum, the role requires permission to the S3 buckets, dynamoDB tables and to deploy the desired resources. See this [AWS blog](https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/) for more information. 
 
-## GitHub Secrets
+#### GitHub Secrets
 
 The next step is to create the following github secrets in your  repository. Use the terraform output values from the previous step.
 
