@@ -13,7 +13,7 @@ env:
   AWS_REGION: "us-east-1"
 
 jobs:
-  deploy-eks:
+  deploy-jenkins:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -105,7 +105,7 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
 
-  deploy-jenkins:
+  deploy-eks:
     runs-on: ubuntu-latest
     defaults:
       run:
