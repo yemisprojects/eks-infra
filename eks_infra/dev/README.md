@@ -1,10 +1,3 @@
-**TODO**
-- hpa
-- karpenter
-- ingress alb
-- logging 
-- monitoring
-
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -22,7 +15,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.25.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.26.0 |
 | <a name="provider_helm"></a> [helm](#provider\_helm) | 2.11.0 |
 | <a name="provider_http"></a> [http](#provider\_http) | 3.4.0 |
 | <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | 1.14.0 |

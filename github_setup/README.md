@@ -42,9 +42,9 @@
 
 | Name | Description |
 |------|-------------|
-| <a name="output_eks_s3_bucket_id"></a> [eks\_s3\_bucket\_id](#output\_eks\_s3\_bucket\_id) | Name of the bucket for S3 eks backend |
-| <a name="output_eks_table_id"></a> [eks\_table\_id](#output\_eks\_table\_id) | Name of dynamodb table for eks remote state |
-| <a name="output_github_role"></a> [github\_role](#output\_github\_role) | github actions role |
-| <a name="output_pipeline_s3_bucket_id"></a> [pipeline\_s3\_bucket\_id](#output\_pipeline\_s3\_bucket\_id) | Name of the bucket for S3 pipeline backend |
-| <a name="output_pipeline_table_id"></a> [pipeline\_table\_id](#output\_pipeline\_table\_id) | Name of dynamodb table for pipeline remote state |
+| <a name="output_aws_role"></a> [aws\_role](#output\_aws\_role) | github actions role |
+| <a name="output_cicd_tfstate_bucket"></a> [cicd\_tfstate\_bucket](#output\_cicd\_tfstate\_bucket) | Name of the bucket for S3 pipeline backend |
+| <a name="output_cicd_tfstate_db"></a> [cicd\_tfstate\_db](#output\_cicd\_tfstate\_db) | Name of dynamodb table for pipeline remote state |
+| <a name="output_eks_tfstate_bucket"></a> [eks\_tfstate\_bucket](#output\_eks\_tfstate\_bucket) | Name of the bucket for S3 eks backend |
+| <a name="output_eks_tfstate_db"></a> [eks\_tfstate\_db](#output\_eks\_tfstate\_db) | Name of dynamodb table for eks remote state |
 <!-- END_TF_DOCS -->

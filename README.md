@@ -4,27 +4,31 @@ This repository contains the terraform code and github workflows used to automat
 - ..
 - ..
 
-## Architecture
+## Infrastructure pipeline Architecture
 
 <img width="2159" alt="GitHub Actions CICD for Terraform" src="">
 
 
-# Required Accounts
+# Required 
 
 - Github account
 - AWS account (Note: This project does not fall under the free tier)
+- Domain (AWS R53 or third party)
+- kubectl Installed locally
+- AWS IAM credentials
+
 
 # GitHub Actions Workflow
 
 1. Fork this repo, create a new branch and check in the Terraform code.
 2. Create a Pull Request (PR) in GitHub once you're ready to merge your code.
-3. A GitHub Actions workflow will trigger to ensure your code is well formatted and produces secure validated. In addition, a Terraform plan will run to generate a preview of the changes that will happen in your AWS account and displayed as a comment on the PR.
-4. Once appropriately reviewed, the PR can be merged into your main branch.
-5. After merge, another GitHub Actions job will trigger from the main branch and execute the changes using Terraform.
+3. A GitHub Actions workflow will trigger to ensure your code is well formatted and validated. In addition, a Terraform plan will run to generate a preview of the changes that will happen in your AWS account and displayed as a comment on the PR.
+4. Once the PR is appropriately reviewed, the PR can be merged into your main branch.
+5. After merge, another GitHub Actions job will trigger from the main branch and deploy the infrastructure using Terraform.
 
 ## Resources Deployed
 
-Below is a list of key resources deployed via the Github Actions. For a complete list of all resources, see this..... terraform docs in this repo.
+Below is a list of key resources deployed via Github Actions. For a complete list of all resources, see the [doc for terraform](https://github.com/yemisprojects/eks-infra/tree/main/eks_infra/dev#readme) in this repo.
 
 1. Provisioned Jenkins Server running on EC2
 2. EKS Cluster with 1 managed Node group
@@ -32,7 +36,7 @@ Below is a list of key resources deployed via the Github Actions. For a complete
 4. ArgoCD
 5. Prometheus and Grafana
 
-## Getting Started
+## Github and Terraform Initial setup
 
 To use the workflows from this repository in your environment several prerequisite steps are required. Most of these have been automated via terraform which you will need to run locally.
 
@@ -58,22 +62,35 @@ To use the workflows from this repository in your environment several prerequisi
     
     Instructions to add the secrets to the repository can be found [here](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository).
 
+Except for the Github secrets the resources above can be created with terraform, run the commands below
 
-## Access grafanna
+`cd github_setup && terraform init && terraform fmt && terraform apply -auto-approve`
 
-Prometheus default login
+
+
+.....
+
+**REQUIRED**: 
+Update value of the grafana_domain_name variable in `eks/dev/variables.t`' to your domain name
+Raise a PR and merge to main
+
+## How to Access grafanna
+An AWS load balancer controller was installed and used to expose Grafana service at Use the default credentials to access Grafana default credentials below.  
 Username: admin
 Password: prom-operator
 
 Import Dashboard ID: 1860
 
-## Access ArgoCD server 
-Run this command to access ArgoCd server. 
-kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
-kubectl port-forward svc/vproapp-service 8083:80
-Goto your browser on 
+## How to Access ArgoCD server 
+You can use port forwarding to access ArgoCD UI for initial configurations 
+`kubectl port-forward svc/vproapp-service 8081:443`
 
-ArgoCd can be exposed as a service but this requires a certificate manager. This is not covered in this project. See the documentation more information
+The default username is `admin` and the default password can be obtained using the command below:
+`kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`
+
+Goto your browser on `https://localhost:8080` and login with the credential abobe
+
+Note: The ideal method to access ArgoCD UI is to expose the ArgoCD service using Ingrss but this requires a certificate. This is not covered in this project. See the ArgoCD [documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/) more information.
 
 
 kubectl port-forward svc/argocd-server -n argocd 8082:80

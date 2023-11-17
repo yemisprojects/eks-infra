@@ -61,7 +61,7 @@ resource "kubectl_manifest" "prometheus" {
     spec:
       ingressClassName: my-aws-ingress-class
       rules:
-        - host: monitoring.devopsprotech.com
+        - host: ${var.grafana_domain_name}
           http:
             paths:
               - path: /
