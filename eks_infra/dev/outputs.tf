@@ -76,3 +76,8 @@ output "aws_iam_openid_connect_provider_arn" {
   description = "AWS IAM Open ID Connect Provider ARN"
   value       = aws_iam_openid_connect_provider.eks.arn
 }
+
+output "eks_secondary_admin_user" {
+  description = "Name of secondary eks admin user"
+  value       = aws_iam_user.admin_user.name
+}
