@@ -20,7 +20,7 @@ This repository contains the terraform code and github workflow used to automate
 
 In addition to the above requirements, there are other prerequisite steps to deploy the resources and use the workflows from this repository in your AWS account. Most of these have been automated via terraform. 
 
-As a first step, fork this repository and run the commands below. Note down the values of the terraform output for the next step
+As a $\textcolor{green}{first step}$first step, fork this repository and run the commands below. Note down the values of the terraform output for the next step
 
 ```t
 cd github_setup && terraform init
@@ -101,7 +101,7 @@ Go to your web browser using the forwared port `https://localhost:8083` and logi
 Note: The ideal method to access ArgoCD UI is to expose the ArgoCD service using Ingress but this requires a certificate. This is not covered in this project. See the ArgoCD [documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/) for more information.
 
 ## Possible Issues
-The most re-occuring issue faced either run locally or via Github actions was with creating Karpenter's provisioner resource. Errors encountered include _Internal error occurred: failed calling webhook "validation.webhook.provisioners.karpenter.sh"_ OR _Failed calling webhook “defaulting.webhook.karpenter.sh”_.  A sample error from the Github Actions logs is shown below.
+The most re-occuring issue faced either run locally or via Github actions was with creating Karpenter's provisioner resource. Errors encountered include _`Internal error occurred: failed calling webhook "validation.webhook.provisioners.karpenter.sh"`_ OR _`Failed calling webhook “defaulting.webhook.karpenter.sh”`_.  A sample error from the Github Actions logs is shown below.
 
 <img width="2159" alt="Karpenter error" src="">
 
