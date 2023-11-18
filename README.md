@@ -66,9 +66,10 @@ Below is a list of key resources deployed via Github Actions. For a complete lis
 
 1. Jenkins running on EC2 accessible via SSM
 2. EKS Cluster with 1 managed node group
-3. Karpenter cluster auto-scaler
-4. ArgoCD
-5. Prometheus and Grafana
+3. Admin user named (eksadmin1) to manage the cluster
+4. Karpenter cluster auto-scaler
+5. ArgoCD
+6. Prometheus and Grafana
 
 Jenkins should be setup to be scalable and highly available but a single instance is used here for simplicity. Review the [documentation](https://www.jenkins.io/doc/book/scaling/architecting-for-scale/) for more information if needed.
 
@@ -83,10 +84,10 @@ Password: prom-operator
 You can import a Kubernetes Dashboard using this ID: `1860`
 
 ## How to access ArgoCD UI 
-You can use port forwarding to [access ArgoCD UI](https://argo-cd.readthedocs.io/en/stable/getting_started/) for initial configuration
+You can use port forwarding to [access ArgoCD UI](https://argo-cd.readthedocs.io/en/stable/getting_started/#3-access-the-argo-cd-api-server) for initial configuration
 
 ```
-kubectl port-forward svc/vproapp-service 8081:443
+kubectl port-forward svc/argocd-server -n argocd 8083:443
 ```
 
 The default username is `admin` and the default password can be obtained using the command below.
@@ -95,9 +96,21 @@ The default username is `admin` and the default password can be obtained using t
 kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 
-Go to your web browser using the forwared port `https://localhost:8081` and login with the credential above
+Go to your web browser using the forwared port `https://localhost:8083` and login with the credential above
 
 Note: The ideal method to access ArgoCD UI is to expose the ArgoCD service using Ingress but this requires a certificate. This is not covered in this project. See the ArgoCD [documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/) for more information.
 
 ## Possible Issues
-https://karpenter.sh/preview/troubleshooting/#webhooks
+The most re-occuring issue faced either run locally or via Github actions was with creating Karpenter's provisioner resource. Errors encountered include _Internal error occurred: failed calling webhook "validation.webhook.provisioners.karpenter.sh"_ OR _Failed calling webhook “defaulting.webhook.karpenter.sh”_.  A sample error from the Github Actions logs is shown below.
+
+<img width="2159" alt="Karpenter error" src="">
+
+These errors are [officially documented](https://karpenter.sh/preview/troubleshooting/#webhooks) as "a bug in ArgoCD’s upgrade workflow where webhooks are leaked. The solution is to simply delete the webhooks
+
+```
+kubectl delete mutatingwebhookconfigurations defaulting.webhook.provisioners.karpenter.sh
+kubectl delete validatingwebhookconfiguration validation.webhook.provisioners.karpenter.sh
+kubectl delete mutatingwebhookconfigurations defaulting.webhook.karpenter.sh
+```
+
+Note that you will need to generate access keys for the eksadmin1 user and run the commands above locally with its credential

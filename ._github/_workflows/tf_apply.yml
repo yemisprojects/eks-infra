@@ -1,0 +1,196 @@
+# name: "Deploy Entire Infrastructure"
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+# permissions:
+#       id-token: write # This is required for aws oidc connection
+#       contents: read # This is required for actions/checkout
+#       pull-requests: write # This is required for gh bot to comment PR
+# env:
+#   # TF_LOG: INFO
+#   AWS_REGION: "us-east-1"
+
+# jobs:
+#   deploy-jenkins:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         shell: bash
+#         working-directory: pipeline_infra 
+
+#     steps:
+#       - name: Git checkout
+#         uses: actions/checkout@v3
+
+#       - name: Configure AWS credentials from AWS account
+#         uses: aws-actions/configure-aws-credentials@v2
+#         with:
+#           role-to-assume: ${{ secrets.AWS_ROLE }}
+#           aws-region: 'us-east-1'
+#           role-session-name: GitHub-OIDC-TERRAFORM
+      
+#       - name: check iam identity
+#         run: aws sts get-caller-identity
+
+#       - name: Setup Terraform
+#         uses: hashicorp/setup-terraform@v2
+
+#       - name: Terraform fmt
+#         id: fmt
+#         run: terraform fmt -check
+#         continue-on-error: true
+
+#       - name: Terraform Init
+#         id: init
+#         env:
+#           AWS_BUCKET_NAME: ${{ secrets.CICD_TFSTATE_BUCKET }}
+#           AWS_DYNAMODB_NAME: ${{ secrets.CICD_TFSTATE_DB }}
+#         run: terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=terraform.tfstate" -backend-config="region=${AWS_REGION}" -backend-config="dynamodb_table=${AWS_DYNAMODB_NAME}"
+
+#       - name: Terraform Validate
+#         id: validate
+#         run: terraform validate -no-color
+
+#       - name: Terraform Plan
+#         id: plan
+#         run: terraform plan -no-color
+#         if: github.event_name == 'pull_request'
+#         continue-on-error: true
+
+#       - uses: actions/github-script@v6
+#         if: github.event_name == 'pull_request'
+#         env:
+#           PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+#         with:
+#           github-token: ${{ secrets.GITHUB_TOKEN }}
+#           script: |
+#             const output = `#### Terraform Format and Style (jenkins pipeline) 🖌\`${{ steps.fmt.outcome }}\`
+#             ####  Terraform Initialization (jenkins pipeline) ⚙️\`${{ steps.init.outcome }}\`
+#             ####  Terraform Validation (jenkins pipeline) 🤖\`${{ steps.validate.outcome }}\`
+#             <details><summary>Validation Output</summary>
+
+#             \`\`\`\n
+#             ${{ steps.validate.outputs.stdout }}
+#             \`\`\`
+
+#             </details>
+
+#             #### Terraform Plan (jenkins pipeline) 📖\`${{ steps.plan.outcome }}\`
+
+#             <details><summary>Show Plan</summary>
+
+#             \`\`\`\n
+#             ${process.env.PLAN}
+#             \`\`\`
+
+#             </details>
+
+#             *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+#             github.rest.issues.createComment({
+#               issue_number: context.issue.number,
+#               owner: context.repo.owner,
+#               repo: context.repo.repo,
+#               body: output
+#             })
+
+#       - name: Terraform Plan Status
+#         if: steps.plan.outcome == 'failure'
+#         run: exit 1
+
+#       - name: Terraform Apply
+#         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+#         run: terraform apply -auto-approve -input=false
+
+#   deploy-eks:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         shell: bash
+#         working-directory: eks_infra/dev #pipeline_infra
+
+#     steps:
+#       - name: Git checkout
+#         uses: actions/checkout@v3
+
+#       - name: Configure AWS credentials from AWS account
+#         uses: aws-actions/configure-aws-credentials@v2
+#         with:
+#           role-to-assume: ${{ secrets.AWS_ROLE }}
+#           aws-region: 'us-east-1'
+#           role-session-name: GitHub-OIDC-TERRAFORM
+      
+#       - name: check iam identity
+#         run: aws sts get-caller-identity
+
+#       - name: Setup Terraform
+#         uses: hashicorp/setup-terraform@v2
+
+#       - name: Terraform fmt
+#         id: fmt
+#         run: terraform fmt -check
+#         continue-on-error: true
+
+#       - name: Terraform Init
+#         id: init
+#         env:
+#           AWS_BUCKET_NAME: ${{ secrets.EKS_TFSTATE_BUCKET }}
+#           AWS_DYNAMODB_NAME: ${{ secrets.EKS_TFSTATE_DB }}
+#         run: terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=terraform.tfstate" -backend-config="region=${AWS_REGION}" -backend-config="dynamodb_table=${AWS_DYNAMODB_NAME}"
+
+#       - name: Terraform Validate
+#         id: validate
+#         run: terraform validate -no-color
+
+#       - name: Terraform Plan
+#         id: plan
+#         run: terraform plan -no-color
+#         if: github.event_name == 'pull_request'
+#         continue-on-error: true
+
+#       - uses: actions/github-script@v6
+#         if: github.event_name == 'pull_request'
+#         env:
+#           PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+#         with:
+#           github-token: ${{ secrets.GITHUB_TOKEN }}
+#           script: |
+#             const output = `#### Terraform Format and Style (EKS) 🖌\`${{ steps.fmt.outcome }}\`
+#             #### Terraform Initialization (EKS) ⚙️\`${{ steps.init.outcome }}\`
+#             #### Terraform Validation (EKS) 🤖\`${{ steps.validate.outcome }}\`
+#             <details><summary>Validation Output</summary>
+
+#             \`\`\`\n
+#             ${{ steps.validate.outputs.stdout }}
+#             \`\`\`
+
+#             </details>
+
+#             #### Terraform Plan (EKS) 📖\`${{ steps.plan.outcome }}\`
+
+#             <details><summary>Show Plan</summary>
+
+#             \`\`\`\n
+#             ${process.env.PLAN}
+#             \`\`\`
+
+#             </details>
+
+#             *Pushed by: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+#             github.rest.issues.createComment({
+#               issue_number: context.issue.number,
+#               owner: context.repo.owner,
+#               repo: context.repo.repo,
+#               body: output
+#             })
+
+#       - name: Terraform Plan Status
+#         if: steps.plan.outcome == 'failure'
+#         run: exit 1
+
+#       - name: Terraform Apply
+#         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+#         run: terraform apply -auto-approve -input=false
