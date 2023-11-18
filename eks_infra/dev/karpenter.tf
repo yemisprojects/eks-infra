@@ -1,64 +1,7 @@
 ################################################################################
 # KARPENTER
 ################################################################################
-provider "aws" {
-  region = "us-east-1"
-  alias  = "virginia"
-}
-
-data "aws_ecrpublic_authorization_token" "token" {
-  provider = aws.virginia
-}
-
 resource "helm_release" "karpenter" {
-  namespace        = "karpenter"
-  create_namespace = true
-
-  # We will be using AWS Public ECR to download needed chart as mentioned Above.
-  name                = "karpenter"
-  repository          = "oci://public.ecr.aws/karpenter"
-  repository_username = data.aws_ecrpublic_authorization_token.token.user_name
-  repository_password = data.aws_ecrpublic_authorization_token.token.password
-  chart               = "karpenter"
-  version             = "v0.32.1"
-  timeout             = 3000
-
-  values = [file("./karpenter_helm_values/values_k.yaml")]
-
-  set {
-    name  = "serviceAccount.name"
-    value = "karpenter"
-  }
-
-  set {
-    name  = "settings.clusterName"
-    value = aws_eks_cluster.eks_cluster.id
-  }
-
-  set {
-    name  = "settings.clusterEndpoint"
-    value = aws_eks_cluster.eks_cluster.endpoint
-  }
-
-  set {
-    name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = aws_iam_role.karpenter_controller.arn
-  }
-
-  set {
-    name  = "settings.aws.defaultInstanceProfile"
-    value = aws_iam_instance_profile.karpenter.name
-  }
-
-  depends_on = [
-    helm_release.karpenter,
-    kubernetes_config_map_v1.aws_auth,
-    aws_eks_node_group.eks_ng_private,
-    aws_eks_cluster.eks_cluster
-  ]
-
-}
-/*resource "helm_release" "karpenter" {
 
   name             = "karpenter"
   repository       = "https://charts.karpenter.sh"
@@ -100,7 +43,6 @@ resource "helm_release" "karpenter" {
     value = 1
   }
 
-  #nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution.nodeSelectorTerms set in values.yaml
   depends_on = [
     helm_release.karpenter,
     kubernetes_config_map_v1.aws_auth,
@@ -108,7 +50,7 @@ resource "helm_release" "karpenter" {
     aws_eks_cluster.eks_cluster
   ]
 
-}*/
+}
 
 ################################################################################
 # Role for kapenter EC2 nodes
@@ -181,7 +123,7 @@ data "aws_iam_policy_document" "karpenter_controller_assume_role_policy" {
 }
 
 resource "aws_iam_policy" "karpenter_controller" {
-  policy = file("./karpenter_controller_policy/controller-trust-policy.json")
+  policy = file("./karpenter_controller_policy/controller-policy.json")
   name   = "KarpenterController"
 }
 
@@ -191,37 +133,33 @@ resource "aws_iam_role_policy_attachment" "karpenter_controller_role_attachment"
 }
 
 
-
-
 ################################################################################
 # EC2 Default provisioner
 ################################################################################
 resource "kubectl_manifest" "karpenter_provisioner" {
   yaml_body = <<-YAML
-    apiVersion: karpenter.sh/v1beta1
-    kind: NodePool
-    metadata:
-    name: default
-    spec:
-    template:
-        spec:
+      apiVersion: karpenter.sh/v1alpha5
+      kind: Provisioner
+      metadata:
+        name: default
+        namespace: karpenter
+      spec:
+        ttlSecondsAfterEmpty: 60 # scale down nodes after 60 seconds without workloads (excluding daemons)
+        ttlSecondsUntilExpired: 604800 # expire nodes after 7 days (in seconds) = 7 * 60 * 60 * 24
+        limits:
+          resources:
+            cpu: 100 # limit to 100 CPU cores
         requirements:
-            - key: kubernetes.io/os
+          # Include general purpose instance families
+          - key: karpenter.k8s.aws/instance-family
             operator: In
-            values: ["linux"]
-            - key: karpenter.k8s.aws/instance-category
-            operator: In
-            values: ["c", "m", "r", "t"]
-            - key: karpenter.k8s.aws/instance-generation
-            operator: Gt
-            values: ["3"]
-        nodeClassRef:
-            name: default
-    limits:
-        cpu: 100
-    disruption:
-        consolidationPolicy: WhenUnderutilized
-        expireAfter: 720h # 30 * 24h = 720h
+            values: [c5, m5, r5, t3]
+          # Exclude small instance sizes
+          # - key: karpenter.k8s.aws/instance-size
+          #   operator: NotIn
+          #   values: [nano, micro, small, large]
+        providerRef:
+          name: my-provider
   YAML
 
   depends_on = [
@@ -234,19 +172,16 @@ resource "kubectl_manifest" "karpenter_provisioner" {
 
 resource "kubectl_manifest" "karpenter_node_template" {
   yaml_body = <<-YAML
-    apiVersion: karpenter.k8s.aws/v1beta1
-    kind: EC2NodeClass
+    apiVersion: karpenter.k8s.aws/v1alpha1
+    kind: AWSNodeTemplate
     metadata:
-    name: default
+      name: my-provider
+      namespace: karpenter
     spec:
-    amiFamily: AL2 # Amazon Linux 2
-    role: "karpenter-instance-node-role"
-    subnetSelectorTerms:
-        - tags:
-            karpenter.sh/discovery: ${var.cluster_name}
-    securityGroupSelectorTerms:
-        - tags:
-            kubernetes.io/cluster/${var.cluster_name}: owned
+      subnetSelector:
+        karpenter.sh/discovery: ${var.cluster_name}
+      securityGroupSelector:
+        kubernetes.io/cluster/${var.cluster_name}: owned
   YAML
 
   depends_on = [

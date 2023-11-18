@@ -62,13 +62,15 @@ plan from a PR (pull request) perspective i suggest you create a new branch and 
 
 #### Resources deployed
 
-Below is a list of key resources deployed via Github Actions. For a complete list of all resources, see the [doc for terraform](https://github.com/yemisprojects/eks-infra/tree/main/eks_infra/dev#readme) in this repo.
+Below is a list of key resources deployed via Github Actions. For a complete list of all resources, see the [doc for terraform](https://github.com/yemisprojects/eks-infra/tree/main/eks_infra/dev#readme) within this repo.
 
-1. Provisioned Jenkins Server running on EC2
+1. Provisioned Jenkins Server running on EC2 
 2. EKS Cluster with 1 managed Node group
 3. Karpenter cluster auto-scaler
 4. ArgoCD
 5. Prometheus and Grafana
+
+Jenkins should be setup to be scalable and highly available but a single instance is used here for simplicity. Review the [documentation](https://www.jenkins.io/doc/book/scaling/architecting-for-scale/) for more information if needed.
 
 ## How to access Grafanna
 An AWS load balancer controller was installed and used to expose the grafana service using the domain name you provided earlier. Go to your browser, provide the domain name and login with the default credentials below.  
@@ -93,7 +95,7 @@ The default username is `admin` and the default password can be obtained using t
 kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 
-Goto your browser using the forwared port `https://localhost:8081` and login with the credential above
+Go to your web browser using the forwared port `https://localhost:8081` and login with the credential above
 
 Note: The ideal method to access ArgoCD UI is to expose the ArgoCD service using Ingress but this requires a certificate. This is not covered in this project. See the ArgoCD [documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/) for more information.
 

@@ -15,7 +15,16 @@
                 "ec2:DeleteLaunchTemplate",
                 "ec2:CreateTags",
                 "ec2:CreateLaunchTemplate",
-                "ec2:CreateFleet"
+                "ec2:CreateFleet",
+                "iam:GetInstanceProfile",
+                "ec2:DescribeImages",
+                "iam:CreateInstanceProfile",
+                "iam:AddRoleToInstanceProfile",
+                "iam:RemoveRoleFromInstanceProfile",
+                "iam:DeleteInstanceProfile",
+                "iam:TagInstanceProfile",
+                "pricing:GetProducts",
+                "ec2:*"
             ],
             "Effect": "Allow",
             "Resource": "*",
