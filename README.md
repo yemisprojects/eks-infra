@@ -56,7 +56,7 @@ Instructions to add the secrets to the repository can be found [here](https://do
 
 ## How to deploy resources via Github Actions
 
-<img width="2159" alt="GitHub Actions CICD for Terraform" src="https://github.com/yemisprojects/eks-infra/blob/main/images/Github%20workflow.png">
+<img width="2159" alt="GitHub Actions CICD for Terraform" src="https://github.com/yemisprojects/eks-infra/blob/main/images/github workflow_.png">
                                             Github Workflow
 
 1. Fork this repo and use the steps in the previous sections to update your github secrets
