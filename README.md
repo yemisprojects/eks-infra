@@ -6,7 +6,7 @@ This repository contains the terraform code and github workflow used to automate
 
 
 
-## Architecture
+<h2 align="center">Architecture</h1>
 
 <img width="2159" alt="GitHub Actions CICD for Terraform" src="">
 
@@ -57,7 +57,7 @@ Instructions to add the secrets to the repository can be found [here](https://do
 ## How to deploy resources via Github Actions
 
 <img alt="GitHub Actions CICD for Terraform" src="https://github.com/yemisprojects/eks-infra/blob/main/images/github workflow_.png">
-                                            Github Workflow
+                                            <h4 align="center">Github Workflow</h4>
 
 1. Fork this repo and use the steps in the previous sections to update your github secrets
 2. **Required**: Update value of the `grafana_domain_name` variable in `eks/dev/variables.tf` to your domain name
