@@ -68,7 +68,7 @@ plan from a PR (pull request) perspective i suggest you create a new branch and 
 4. Once the PR is appropriately reviewed, the PR can be merged into your main branch.
 5. After merge, another GitHub Actions job will trigger from the main branch and deploy the infrastructure using Terraform.
 
-#### Resources deployed
+<h4 align="center">Resources deployed</h4>
 
 Below is a list of key resources deployed via Github Actions. For a complete list of all resources, see the [doc for terraform](https://github.com/yemisprojects/eks-infra/tree/main/eks_infra/dev#readme) within this repo.
 
