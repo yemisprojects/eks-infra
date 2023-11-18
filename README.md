@@ -4,9 +4,14 @@ This repository contains the terraform code and github workflow used to automate
 - https://github.com/yemisprojects/eks-app (contains application to be containerized)
 - https://github.com/yemisprojects/kubernetes-manifests (contains helm charts for deployment by ArgoCD)
 
-## Infrastructure pipeline Architecture
+
+
+## Architecture
 
 <img width="2159" alt="GitHub Actions CICD for Terraform" src="">
+
+
+Github Actions integrates seamlessly with Github and there is a wide variety of reusable github actions from the [github marketplace](https://github.com/marketplace) to adopt. Pipeline workflows are written in YAML and with Github-Hosted runners its easy to get started with minimal operational overhead. Terrafom is open source, cloud agnostic with a large community contributing to it. It also provides the flexibility to work with many providers (cloud and non-cloud) and a wide variety of modules you can reuse. This makes it a versatile IaC tool. 
 
 # Prerequisites
 
@@ -50,6 +55,11 @@ The next step is to create the following github secrets in your  repository. Use
 Instructions to add the secrets to the repository can be found [here](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository).
 
 ## How to deploy resources via Github Actions
+
+<img width="2159" alt="GitHub Actions CICD for Terraform" src="">
+
+
+                                            Github Workflow
 
 1. Fork this repo and use the steps in the previous sections to update your github secrets
 2. **Required**: Update value of the `grafana_domain_name` variable in `eks/dev/variables.tf` to your domain name
@@ -105,7 +115,7 @@ The most re-occuring issue i faced running the project locally or via Github act
 
 <img width="2159" alt="Karpenter error" src="https://github.com/yemisprojects/eks-infra/blob/main/images/Karpenter%20error.png">
 
-These errors are [officially documented](https://karpenter.sh/preview/troubleshooting/#webhooks) as "a bug in ArgoCD’s upgrade workflow where webhooks are leaked. The solution is to simply delete the webhooks
+These errors are [officially documented](https://karpenter.sh/preview/troubleshooting/#webhooks) as _"a bug in ArgoCD’s upgrade workflow where webhooks are leaked"_. The solution is to simply delete the webhooks and rerun terraform apply or rerun the workflow
 
 ```sh
 kubectl delete mutatingwebhookconfigurations defaulting.webhook.provisioners.karpenter.sh
@@ -113,4 +123,4 @@ kubectl delete validatingwebhookconfiguration validation.webhook.provisioners.ka
 kubectl delete mutatingwebhookconfigurations defaulting.webhook.karpenter.sh
 ```
 
-Note that you will need to generate access keys for the eksadmin1 user and run the commands above locally with its credential
+Note that you will need to generate access keys for the eksadmin1 user, create a new aws profile locally and run the commands above with the new profile
