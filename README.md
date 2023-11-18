@@ -64,8 +64,8 @@ plan from a PR (pull request) perspective i suggest you create a new branch and 
 
 Below is a list of key resources deployed via Github Actions. For a complete list of all resources, see the [doc for terraform](https://github.com/yemisprojects/eks-infra/tree/main/eks_infra/dev#readme) within this repo.
 
-1. Provisioned Jenkins Server running on EC2 
-2. EKS Cluster with 1 managed Node group
+1. Jenkins running on EC2 accessible via SSM
+2. EKS Cluster with 1 managed node group
 3. Karpenter cluster auto-scaler
 4. ArgoCD
 5. Prometheus and Grafana
