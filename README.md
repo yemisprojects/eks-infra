@@ -109,7 +109,7 @@ Go to your web browser using the forwared port `https://localhost:8083` and logi
 
 Note: The ideal method to access ArgoCD UI is to expose the ArgoCD service using Ingress but this requires a certificate. This is not covered in this project. See the ArgoCD [documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/) for more information.
 
-## Possible Issues
+## Possible issues
 The most re-occuring issue i faced running the project locally or via Github actions was with creating Karpenter's provisioner resource. Errors encountered include _`Internal error occurred: failed calling webhook "validation.webhook.provisioners.karpenter.sh"`_ OR _`Failed calling webhook “defaulting.webhook.karpenter.sh”`_.  A sample error from the Github Actions logs is shown below.
 
 <img width="2159" alt="Karpenter error" src="https://github.com/yemisprojects/eks-infra/blob/main/images/Karpenter%20error.png">
