@@ -22,7 +22,7 @@ In addition to the above requirements, there are other prerequisite steps to dep
 
 As a <span style="color:green;">first step</span> , fork this repository and run the commands below. Note down the values of the terraform output for the next step
 
-```t
+```sh
 cd github_setup && terraform init
 terraform fmt && terraform apply -auto-approve
 ```
