@@ -20,7 +20,7 @@ This repository contains the terraform code and github workflow used to automate
 
 In addition to the above requirements, there are other prerequisite steps to deploy the resources and use the workflows from this repository in your AWS account. Most of these have been automated via terraform. 
 
-As a <span style="color:green;">first step</span> , fork this repository and run the commands below. Note down the values of the terraform output for the next step
+As a first step, fork this repository and run the commands below. Note down the values of the terraform output for the next step
 
 ```sh
 cd github_setup && terraform init
@@ -86,13 +86,13 @@ You can import a Kubernetes Dashboard using this ID: `1860`
 ## How to access ArgoCD UI 
 You can use port forwarding to [access ArgoCD UI](https://argo-cd.readthedocs.io/en/stable/getting_started/#3-access-the-argo-cd-api-server) for initial configuration
 
-```
+```sh
 kubectl port-forward svc/argocd-server -n argocd 8083:443
 ```
 
 The default username is `admin` and the default password can be obtained using the command below.
 
-```
+```sh
 kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 
@@ -101,13 +101,13 @@ Go to your web browser using the forwared port `https://localhost:8083` and logi
 Note: The ideal method to access ArgoCD UI is to expose the ArgoCD service using Ingress but this requires a certificate. This is not covered in this project. See the ArgoCD [documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/) for more information.
 
 ## Possible Issues
-The most re-occuring issue faced either run locally or via Github actions was with creating Karpenter's provisioner resource. Errors encountered include _`Internal error occurred: failed calling webhook "validation.webhook.provisioners.karpenter.sh"`_ OR _`Failed calling webhook “defaulting.webhook.karpenter.sh”`_.  A sample error from the Github Actions logs is shown below.
+The most re-occuring issue i faced running the project locally or via Github actions was with creating Karpenter's provisioner resource. Errors encountered include _`Internal error occurred: failed calling webhook "validation.webhook.provisioners.karpenter.sh"`_ OR _`Failed calling webhook “defaulting.webhook.karpenter.sh”`_.  A sample error from the Github Actions logs is shown below.
 
-<img width="2159" alt="Karpenter error" src="">
+<img width="2159" alt="Karpenter error" src="https://github.com/yemisprojects/eks-infra/blob/main/images/Karpenter%20error.png">
 
 These errors are [officially documented](https://karpenter.sh/preview/troubleshooting/#webhooks) as "a bug in ArgoCD’s upgrade workflow where webhooks are leaked. The solution is to simply delete the webhooks
 
-```
+```sh
 kubectl delete mutatingwebhookconfigurations defaulting.webhook.provisioners.karpenter.sh
 kubectl delete validatingwebhookconfiguration validation.webhook.provisioners.karpenter.sh
 kubectl delete mutatingwebhookconfigurations defaulting.webhook.karpenter.sh
