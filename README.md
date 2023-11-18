@@ -20,7 +20,7 @@ This repository contains the terraform code and github workflow used to automate
 
 In addition to the above requirements, there are other prerequisite steps to deploy the resources and use the workflows from this repository in your AWS account. Most of these have been automated via terraform. 
 
-As a $\textcolor{green}{first step}$first step, fork this repository and run the commands below. Note down the values of the terraform output for the next step
+As a $\textcolor{green}{first step}$ , fork this repository and run the commands below. Note down the values of the terraform output for the next step
 
 ```t
 cd github_setup && terraform init
