@@ -1,10 +1,8 @@
 # DevSecOps CI/CD with Jenkins and ArgoCD
 
-This repository contains the terraform code and github workflow used to automate the deployment of the infrastructure required to implement an end-to-end DevSecOps CI/CD pipeline to EKS. CI is implemented using Jenkins and CD via ArgoCD (GitOps). This repo is intended to be used with the two repositories listed below.
-- https://github.com/yemisprojects/eks-app (contains application to be containerized)
+This repository contains the terraform code and github workflow used to automate the deployment of the infrastructure required to implement an end-to-end DevSecOps CI/CD pipeline to EKS. CI is implemented using Jenkins and CD via ArgoCD (GitOps). This repository is intended to be used with the two repositories below in order.
+- https://github.com/yemisprojects/eks-app (contains application source code to be containerized)
 - https://github.com/yemisprojects/kubernetes-manifests (contains helm charts for deployment by ArgoCD)
-
-
 
 <h2 align="center">Architecture</h1>
 
@@ -79,8 +77,16 @@ Below is a list of key resources deployed via Github Actions. For a complete lis
 4. Karpenter cluster auto-scaler
 5. ArgoCD
 6. Prometheus and Grafana
+7. AWS Application Load balancer Controller
 
 Jenkins should be setup to be scalable and highly available but a single instance is used here for simplicity. Review the [documentation](https://www.jenkins.io/doc/book/scaling/architecting-for-scale/) for more information if needed.
+
+## Verify EKS access
+Confirm the cluster is created successfully and you can access it with these commands. Replace `eksadmin1` with the AWS CLI profile created for the `eksadmin1` user
+```sh
+aws eks update-kubeconfig --region us-west-2 --name eks-poc --profile <eksadmin1>
+kubectl get nodes
+```
 
 ## How to access Grafanna
 An AWS load balancer controller was installed and used to expose the grafana service using the domain name you provided earlier. Go to your browser, provide the domain name and login with the default credentials below.  
@@ -94,20 +100,17 @@ You can import a Kubernetes Dashboard using this ID: `1860`
 
 ## How to access ArgoCD UI 
 You can use port forwarding to [access ArgoCD UI](https://argo-cd.readthedocs.io/en/stable/getting_started/#3-access-the-argo-cd-api-server) for initial configuration
-
 ```sh
 kubectl port-forward svc/argocd-server -n argocd 8083:443
 ```
-
 The default username is `admin` and the default password can be obtained using the command below.
-
 ```sh
 kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
-
 Go to your web browser using the forwared port `https://localhost:8083` and login with the credential above
 
 Note: The ideal method to access ArgoCD UI is to expose the ArgoCD service using Ingress but this requires a certificate. This is not covered in this project. See the ArgoCD [documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/) for more information.
+
 
 ## Possible issues
 The most re-occuring issue i faced running the project locally or via Github actions was with creating Karpenter's provisioner resource. Errors encountered include _`Internal error occurred: failed calling webhook "validation.webhook.provisioners.karpenter.sh"`_ OR _`Failed calling webhook “defaulting.webhook.karpenter.sh”`_.  A sample error from the Github Actions logs is shown below.
