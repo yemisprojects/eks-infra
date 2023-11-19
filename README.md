@@ -6,9 +6,7 @@ This repository contains the terraform code and github workflow used to automate
 
 <h2 align="center">Architecture</h1>
 
-....Pending Image
-<!--- <img width="2159" alt="GitHub Actions CICD for Terraform" src="">--->
-
+<img alt="GitHub Actions CICD for Terraform" src="https://github.com/yemisprojects/eks-infra/blob/main/images/architecture/architecture%20used.png">
 
 Github Actions integrates seamlessly with Github and there is a wide variety of reusable github actions from the [github marketplace](https://github.com/marketplace) to adopt. Pipeline workflows are written in YAML and with Github-Hosted runners its easy to get started with minimal operational overhead. Terrafom is open source, cloud agnostic with a large community contributing to it. It also provides the flexibility to work with many providers (cloud and non-cloud) and a wide variety of modules you can reuse. This makes it a versatile IaC tool. 
 
