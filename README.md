@@ -1,4 +1,4 @@
-# DevSecOps CI/CD with Jenkins and ArgoCD
+<h1 align="center">DevSecOps CI/CD with Jenkins and ArgoCD</h1>
 
 This repository contains the terraform code and github workflow used to automate the deployment of the infrastructure required to implement an end-to-end DevSecOps CI/CD pipeline to EKS. CI is implemented using Jenkins and CD via ArgoCD (GitOps). This repository is intended to be used with the two repositories below in order.
 - [eks-app](https://github.com/yemisprojects/eks-app) repo: contains application source code to be containerized
