@@ -1,8 +1,8 @@
 <h1 align="center">DevSecOps CI/CD with Jenkins and ArgoCD</h1>
 
-This repository contains the terraform code and github workflow used to automate the deployment of the infrastructure required to implement an end-to-end DevSecOps CI/CD pipeline to EKS. CI is implemented using Jenkins and CD using ArgoCD. This repository is intended to be used with the two repositories below in order.
+This repository contains the terraform code and github workflow used to automate the deployment of the infrastructure required to implement an end-to-end DevSecOps CI/CD pipeline to EKS. CI is implemented using Jenkins and CD using Argo CD. This repository is intended to be used with the two repositories below in order.
 - [eks-app](https://github.com/yemisprojects/eks-app) repo: It contains the application source code to be containerized
-- [kubernetes-manifests](https://github.com/yemisprojects/kubernetes-manifests) repo: It contains helm charts for deployment by ArgoCD
+- [kubernetes-manifests](https://github.com/yemisprojects/kubernetes-manifests) repo: It contains helm charts for deployment by Argo CD
 
 <h2 align="center">Architecture</h1>
 
@@ -62,7 +62,7 @@ Instructions to add the secrets to the repository can be found [here](https://do
 4. Create a Pull Request (PR) in GitHub once you're ready to merge your code.
 5. 
     - A GitHub Actions workflow will trigger to ensure your code is well formatted and validated. A Terraform plan will also run to generate a preview of the changes that will happen in your AWS account and displayed as a comment on the PR. 
-    - Concurrently Checkov will scan your Terraform configurations for security misconfigurations. The results of the latter can be found in the `Security` tab -> `Code Scanning` section of your repository. Note, enforcement has been disabled in the workflow to allow all checks to pass. Code scan snippet is shown below
+    - Concurrently Checkov will scan your Terraform configurations for security misconfigurations. The results of the latter can be found in the `Security` tab -> `Code Scanning` section of your repository. Note, enforcement has been disabled in the workflow to allow all checks to pass. Sample code scan results are shown in the screenshot below.
 6. Once the PR is appropriately reviewed, the PR can be merged into your main branch.
 7. After merge, another job will trigger from the main branch and deploy the infrastructure using Terraform. Generally, creating the cluster can take up to 10mins.
 
@@ -71,13 +71,13 @@ Instructions to add the secrets to the repository can be found [here](https://do
 
 <h4>Resources deployed</h4>
 
-Below is a list of key resources deployed via Github Actions. For a complete list of all resources, see the [doc for terraform](https://github.com/yemisprojects/eks-infra/tree/main/eks_infra/dev#readme) within this repo.
+Below is a list of key resources deployed via the pipeline. For a complete list of all resources, see the [doc for terraform](https://github.com/yemisprojects/eks-infra/tree/main/eks_infra/dev#readme) within this repo.
 
 1. Jenkins running on EC2 accessible via SSM
 2. EKS Cluster with 1 managed node group
 3. Admin user named (eksadmin1) to manage the cluster
 4. Karpenter cluster auto-scaler
-5. ArgoCD
+5. Argo CD
 6. Prometheus and Grafana
 7. AWS Application Load balancer Controller
 
@@ -101,8 +101,8 @@ Password: prom-operator
 
 You can [import](https://grafana.com/docs/grafana/latest/dashboards/manage-dashboards/#import-a-dashboard) a Kubernetes Cluster Dashboard using this ID: `1860`
 
-## How to access ArgoCD UI 
-You can use port forwarding to [access ArgoCD UI](https://argo-cd.readthedocs.io/en/stable/getting_started/#3-access-the-argo-cd-api-server) for initial configuration
+## How to access Argo CD UI 
+You can use port forwarding to [access Argo CD UI](https://argo-cd.readthedocs.io/en/stable/getting_started/#3-access-the-argo-cd-api-server) for initial configuration
 ```sh
 kubectl port-forward svc/argocd-server -n argocd 8083:443
 ```
@@ -112,11 +112,11 @@ kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.pas
 ```
 Go to your web browser using the forwared port `https://localhost:8083` and login with the credential above
 
-Note: The ideal method to access ArgoCD UI is to expose the ArgoCD service using Ingress but this requires a certificate. This is not covered in this project. See the ArgoCD [documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/) for more information.
+Note: The ideal method to access Argo CD UI is to expose the Argo CD service using Ingress but this requires a certificate. This is not covered in this project. See the ArgoCD [documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/) for more information.
 
 ## Verify Karpenter installation
 
-Due to the number of cluster addons installed such as grafana, argoCD it is expected the cluster will scale up to more than two nodes. Run the command below to verify successfull installation and that there are no errors in the karpenter logs. 
+Due to the number of cluster addons installed such as grafana, Argo CD it is expected the cluster will scale up to more than two nodes. Run the command below to verify successfull installation and that there are no errors in the karpenter logs. 
 ```sh
 kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter -c controller
 ```
@@ -126,7 +126,7 @@ The most re-occuring issue i faced running the project locally or via Github act
 
 <img width="2159" alt="Karpenter error" src="https://github.com/yemisprojects/eks-infra/blob/main/images/Karpenter%20error.png">
 
-These errors are [officially documented](https://karpenter.sh/preview/troubleshooting/#webhooks) as _"a bug in ArgoCD’s upgrade workflow where webhooks are leaked"_. The solution is to simply delete the webhooks and rerun terraform apply or rerun the workflow
+These errors are [officially documented](https://karpenter.sh/preview/troubleshooting/#webhooks) as _"a bug in Argo CD’s upgrade workflow where webhooks are leaked"_. The solution is to simply delete the webhooks and rerun terraform apply or rerun the workflow
 
 ```sh
 kubectl delete mutatingwebhookconfigurations defaulting.webhook.provisioners.karpenter.sh
