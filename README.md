@@ -1,14 +1,14 @@
 <h1 align="center">DevSecOps CI/CD with Jenkins and ArgoCD</h1>
 
-This repository contains the terraform code and github workflow used to automate the deployment of the infrastructure required to implement an end-to-end DevSecOps CI/CD pipeline to EKS. CI is implemented using Jenkins and CD via ArgoCD (GitOps). This repository is intended to be used with the two repositories below in order.
-- [eks-app](https://github.com/yemisprojects/eks-app) repo: contains application source code to be containerized
-- [kubernetes-manifests](https://github.com/yemisprojects/kubernetes-manifests) repo: contains helm charts for deployment by ArgoCD
+This repository contains the terraform code and github workflow used to automate the deployment of the infrastructure required to implement an end-to-end DevSecOps CI/CD pipeline to EKS. CI is implemented using Jenkins and CD using ArgoCD. This repository is intended to be used with the two repositories below in order.
+- [eks-app](https://github.com/yemisprojects/eks-app) repo: It contains the application source code to be containerized
+- [kubernetes-manifests](https://github.com/yemisprojects/kubernetes-manifests) repo: It contains helm charts for deployment by ArgoCD
 
 <h2 align="center">Architecture</h1>
 
 <img alt="GitHub Actions CICD for Terraform" src="https://github.com/yemisprojects/eks-infra/blob/main/images/architecture/architecture%20used.png">
 
-Github Actions integrates seamlessly with Github and there is a wide variety of reusable github actions from the [github marketplace](https://github.com/marketplace) to adopt. Pipeline workflows are written in YAML and with Github-Hosted runners its easy to get started with minimal operational overhead. Terrafom is open source, cloud agnostic with a large community contributing to it. It also provides the flexibility to work with many providers (cloud and non-cloud) and a wide variety of modules you can reuse. This makes it a versatile IaC tool. 
+Github Actions integrates seamlessly with Github and there is a wide variety of reusable actions from the [github marketplace](https://github.com/marketplace) to adopt. Pipeline workflows are written in YAML and with Github-Hosted runners its easy to get started with minimal operational overhead. Terrafom is open source, cloud agnostic with a large community contributing to it. It also provides the flexibility to work with many providers (cloud and non-cloud) and a wide variety of modules you can reuse. This makes it a versatile IaC tool. Checkov is a static code analysis tool for infrastructure as code (IaC) and also a software composition analysis (SCA) tool for images and open source packages. It detects security and compliance misconfigurations. Each of these tools have been used to automate infrastructure deployment for this project
 
 # Prerequisites
 
@@ -37,7 +37,7 @@ Using the command above, terraform creates the following resources:
 
 2. **IAM role utilized by Github to authenticate to AWS**: 
 
-    An IAM Role will be via by the pipeline using OIDC to authenticate to AWS and carry out actions in your AWS account. At a minimum, the role requires permission to the S3 buckets, dynamoDB tables and to deploy the desired resources. See this [AWS blog](https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/) for more information. 
+    Using [OpenID Connect (OIDC)](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services) an IAM Role will be used by the pipeline to authenticate and carry out actions in your AWS account. At a minimum, the role requires permission to the S3 buckets, dynamoDB tables and to deploy the desired resources. See this [AWS blog](https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/) for more information. Note that, admin permissions have been used for simplicity in this project. In a real time scenario, you should adhere to the principle of least privilege
 
 #### GitHub Secrets
 
