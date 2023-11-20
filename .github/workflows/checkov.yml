@@ -32,7 +32,7 @@ jobs:
 
   Trivy-scan:
     name: trivy
-    needs: checkov
+    needs: checkov-scan
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
