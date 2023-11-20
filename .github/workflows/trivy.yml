@@ -5,6 +5,7 @@ on:
       - main
   pull_request:
 jobs:
+  needs: checkov-scan
   build:
     name: Trivy scan
     runs-on: ubuntu-20.04
@@ -13,7 +14,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run Trivy vulnerability scanner in IaC mode
-        uses: aquasecurity/trivy-action@0.8.0
+        uses: aquasecurity/trivy-action@0.7.0
         continue-on-error: true
         with:
           scan-type: 'config'
