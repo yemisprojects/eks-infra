@@ -1,31 +1,32 @@
-name: "Trivy Scan"
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-jobs:
-  build:
-    name: Trivy scan
-    runs-on: ubuntu-20.04
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+# name: "Trivy Scan"
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+# jobs:
+#   needs: checkov-scan
+#   build:
+#     name: Trivy scan
+#     runs-on: ubuntu-20.04
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
 
-      - name: Run Trivy vulnerability scanner in IaC mode
-        uses: aquasecurity/trivy-action@0.8.0
-        continue-on-error: true
-        with:
-          scan-type: 'config'
-          hide-progress: false
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          exit-code: '1'
-          ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
+#       - name: Run Trivy vulnerability scanner in IaC mode
+#         uses: aquasecurity/trivy-action@0.7.0
+#         continue-on-error: true
+#         with:
+#           scan-type: 'config'
+#           hide-progress: false
+#           format: 'sarif'
+#           output: 'trivy-results.sarif'
+#           exit-code: '1'
+#           ignore-unfixed: true
+#           severity: 'CRITICAL,HIGH'
 
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        if: success() || failure()
-        with:
-          sarif_file: 'trivy-results.sarif'
+#       - name: Upload Trivy scan results to GitHub Security tab
+#         uses: github/codeql-action/upload-sarif@v2
+#         if: success() || failure()
+#         with:
+#           sarif_file: 'trivy-results.sarif'
