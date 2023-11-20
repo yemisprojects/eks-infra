@@ -5,6 +5,7 @@ on:
   pull_request:
   workflow_dispatch:
 
+
 jobs:
   scan:
     permissions:

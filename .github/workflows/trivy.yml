@@ -16,7 +16,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         continue-on-error: true
         with:
-          scan-type: 'fs'
+          scan-type: 'config'
           hide-progress: false
           format: 'sarif'
           output: 'trivy-results.sarif'
