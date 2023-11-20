@@ -67,7 +67,7 @@ Instructions to add the secrets to the repository can be found [here](https://do
 7. After merge, another job will trigger from the main branch and deploy the infrastructure using Terraform. Generally, creating the cluster can take up to 10mins.
 
 <img alt="Checkov code scan" src="https://github.com/yemisprojects/eks-infra/blob/main/images/archiecture_github_actions/checkov%20scan.png">
-                                            <h4 align="center">Checkov scan</h4>
+                                            <h5 align="center">Checkov scan result</h5>
 
 <h4>Resources deployed</h4>
 
