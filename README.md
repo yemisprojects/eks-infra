@@ -58,7 +58,7 @@ Instructions to add the secrets to the repository can be found [here](https://do
 
 1. Fork this repo and use the steps in the previous sections to update your github secrets
 2. **_Required_**: Update value of the `grafana_domain_name` variable in `eks/dev/variables.tf` to your domain name
-3. You can push your change directly to the main branch but to see the terraform plan from a PR (pull request) perspective i suggest you create a new branch and check in the Terraform code with your change.
+3. You can push your change directly to the main branch. However, to see the comments on the PR by github-actions bot and terraform plan from a PR (pull request) perspective i suggest you create a new branch and check in the Terraform code with your change. Also one would typically not merge changes directly to the main branch
 4. Create a Pull Request (PR) in GitHub once you're ready to merge your code.
 3. A GitHub Actions workflow will trigger to ensure your code is well formatted and validated. A Terraform plan will also run to generate a preview of the changes that will happen in your AWS account and displayed as a comment on the PR. Concurrently CheckOv will scan your Terraform configurations for security misconfigurations. The results of the latter can be found in the Security tab -> Code Scanning section of your repository. Note, enforcement has been disabled in the workflow to allow all checks
 to pass.
