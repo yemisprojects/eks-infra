@@ -41,7 +41,7 @@ Using the command above, terraform creates the following resources:
 
 #### GitHub Secrets
 
-The next step is to create the following github secrets in your  repository. Use the terraform output values from the previous step.
+The next step is to create the following github secrets in your repository. Use the terraform output values from the previous step.
 
 - `AWS_ROLE` : Federated IAM role to be utilized by Github actions
 - `CICD_TFSTATE_BUCKET` : Bucket name for remote backed for Jenkins instance
@@ -57,13 +57,13 @@ Instructions to add the secrets to the repository can be found [here](https://do
                                             <h4 align="center">Github Workflow</h4>
 
 1. Fork this repo and use the steps in the previous sections to update your github secrets
-2. **Required**: Update value of the `grafana_domain_name` variable in `eks/dev/variables.tf` to your domain name
-3. You can push your change directly to the main branch but to see the terraform 
-plan from a PR (pull request) perspective i suggest you create a new branch and check in the Terraform code with your change.
+2. **_Required_**: Update value of the `grafana_domain_name` variable in `eks/dev/variables.tf` to your domain name
+3. You can push your change directly to the main branch but to see the terraform plan from a PR (pull request) perspective i suggest you create a new branch and check in the Terraform code with your change.
 4. Create a Pull Request (PR) in GitHub once you're ready to merge your code.
-3. A GitHub Actions workflow will trigger to ensure your code is well formatted and validated. In addition, a Terraform plan will run to generate a preview of the changes that will happen in your AWS account and displayed as a comment on the PR.
+3. A GitHub Actions workflow will trigger to ensure your code is well formatted and validated. A Terraform plan will also run to generate a preview of the changes that will happen in your AWS account and displayed as a comment on the PR. Concurrently CheckOv will scan your Terraform configurations for security misconfigurations. The results of the latter can be found in the Security tab -> Code Scanning section of your repository. Note, enforcement has been disabled in the workflow to allow all checks
+to pass.
 4. Once the PR is appropriately reviewed, the PR can be merged into your main branch.
-5. After merge, another GitHub Actions job will trigger from the main branch and deploy the infrastructure using Terraform.
+5. After merge, another job will trigger from the main branch and deploy the infrastructure using Terraform. Generally, creating the cluster can take up to 10mins.
 
 <h4 align="center">Resources deployed</h4>
 
@@ -77,14 +77,16 @@ Below is a list of key resources deployed via Github Actions. For a complete lis
 6. Prometheus and Grafana
 7. AWS Application Load balancer Controller
 
-Jenkins should be setup to be scalable and highly available but a single instance is used here for simplicity. Review the [documentation](https://www.jenkins.io/doc/book/scaling/architecting-for-scale/) for more information if needed.
-
 ## Verify EKS access
 Confirm the cluster is created successfully and you can access it with these commands. Replace `eksadmin1` with the AWS CLI profile created for the `eksadmin1` user
 ```sh
 aws eks update-kubeconfig --region us-west-2 --name eks-poc --profile <eksadmin1>
 kubectl get nodes
 ```
+
+## Verify Jenkins access
+
+Jenkins should be setup to be scalable and highly available but a single instance is used here for simplicity. Review the [documentation](https://www.jenkins.io/doc/book/scaling/architecting-for-scale/) for more information if needed. Goto the __http://x.x.x.x:8080__ where `x.x.x.x` is the public IP
 
 ## How to access Grafanna
 An AWS load balancer controller was installed and used to expose the grafana service using the domain name you provided earlier. Go to your browser, provide the domain name and login with the default credentials below.  
