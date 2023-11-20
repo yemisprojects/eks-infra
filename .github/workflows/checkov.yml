@@ -1,5 +1,4 @@
 name: checkov scan
-
 on:
   push:
     branches: [ "main" ]
