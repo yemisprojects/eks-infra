@@ -69,7 +69,7 @@ Instructions to add the secrets to the repository can be found [here](https://do
 <img alt="Checkov code scan" src="https://github.com/yemisprojects/eks-infra/blob/main/images/archiecture_github_actions/checkov%20scan.png">
                                             <h4 align="center">Checkov scan</h4>
 
-<h4 align="center">Resources deployed</h4>
+<h4>Resources deployed</h4>
 
 Below is a list of key resources deployed via Github Actions. For a complete list of all resources, see the [doc for terraform](https://github.com/yemisprojects/eks-infra/tree/main/eks_infra/dev#readme) within this repo.
 
