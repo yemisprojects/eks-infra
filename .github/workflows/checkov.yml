@@ -13,6 +13,7 @@ permissions:
 
 jobs:
   checkov-scan:
+    name: checkov
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -29,9 +30,10 @@ jobs:
         with:
           sarif_file: results.sarif
 
-  name: Trivy scan
+  Trivy scan:
+    name: trivy
+    needs: checkov
     runs-on: ubuntu-20.04
-    needs: checkov-scan
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
