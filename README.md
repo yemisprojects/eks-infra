@@ -112,7 +112,7 @@ Note: The ideal method to access ArgoCD UI is to expose the ArgoCD service using
 
 ## Verify Karpenter installation
 
-Due to the number of addon components installed, it is expected the cluster will scaler up to more than two nodes. If there are any errors, run the command below to confirm there are no errors in the karpenter logs. 
+Due to the number of cluster addons installed such as grafana, argoCD it is expected the cluster will scale up to more than two nodes. Run the command below to verify successfull installation and that there are no errors in the karpenter logs. 
 ```sh
 kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter -c controller
 ```
