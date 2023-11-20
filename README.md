@@ -85,18 +85,17 @@ kubectl get nodes
 ```
 
 ## Verify Jenkins access
-
-Jenkins should be setup to be scalable and highly available but a single instance is used here for simplicity. Review the [documentation](https://www.jenkins.io/doc/book/scaling/architecting-for-scale/) for more information if needed. Goto the __http://x.x.x.x:8080__ where `x.x.x.x` is the public IP
+Jenkins should be setup to be scalable and highly available but a single instance is used here for simplicity. Review the [documentation](https://www.jenkins.io/doc/book/scaling/architecting-for-scale/) for more information if needed. Goto the `http://x.x.x.x:8080` where _x.x.x.x_ is it EC2 public IP. Configuring Jenkins is detailed extensively in the [eks-app](https://github.com/yemisprojects/eks-app) repo.
 
 ## How to access Grafanna
-An AWS load balancer controller was installed and used to expose the grafana service using the domain name you provided earlier. Go to your browser, provide the domain name and login with the default credentials below.  
+An AWS load balancer controller was installed and used to expose the grafana service using the domain name you provided earlier. Go to your browser, provide the domain name and login with the default credentials below. Also ensure a CNAME record has been added in your domain to complete access. Instructions for AWS Route53 is found [here](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-creating.html).
 
 ```
 Username: admin
 Password: prom-operator
 ```
 
-You can import a Kubernetes Dashboard using this ID: `1860`
+You can [import](https://grafana.com/docs/grafana/latest/dashboards/manage-dashboards/#import-a-dashboard) a Kubernetes Cluster Dashboard using this ID: `1860`
 
 ## How to access ArgoCD UI 
 You can use port forwarding to [access ArgoCD UI](https://argo-cd.readthedocs.io/en/stable/getting_started/#3-access-the-argo-cd-api-server) for initial configuration
@@ -111,6 +110,12 @@ Go to your web browser using the forwared port `https://localhost:8083` and logi
 
 Note: The ideal method to access ArgoCD UI is to expose the ArgoCD service using Ingress but this requires a certificate. This is not covered in this project. See the ArgoCD [documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/) for more information.
 
+## Verify Karpenter installation
+
+Due to the number of addon components installed, it is expected the cluster will scaler up to more than two nodes. If there are any errors, run the command below to confirm there are no errors in the karpenter logs. 
+```sh
+kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter -c controller
+```
 
 ## Possible issues
 The most re-occuring issue i faced running the project locally or via Github actions was with creating Karpenter's provisioner resource. Errors encountered include _`Internal error occurred: failed calling webhook "validation.webhook.provisioners.karpenter.sh"`_ OR _`Failed calling webhook “defaulting.webhook.karpenter.sh”`_.  A sample error from the Github Actions logs is shown below.
@@ -125,4 +130,4 @@ kubectl delete validatingwebhookconfiguration validation.webhook.provisioners.ka
 kubectl delete mutatingwebhookconfigurations defaulting.webhook.karpenter.sh
 ```
 
-Note that you will need to generate access keys for the eksadmin1 user, create a new aws profile locally and run the commands above with the new profile
+Note that you will need to generate access keys for the `eksadmin1` user, create a new AWS profile locally and run the commands above with the new profile
