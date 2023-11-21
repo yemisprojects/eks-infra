@@ -131,7 +131,6 @@ Destroy the infrastructure after you have completed all the steps regarding impl
 - A screenshot is shown below for reference
 <img alt="Karpenter error" src="https://github.com/yemisprojects/eks-infra/blob/main/images/Destroy%20eks%20cluster.png">
 
-
 ## Possible issues
 1. The most re-occuring issue i faced running the project locally or via Github actions was with creating Karpenter's provisioner resource. Errors encountered include _`Internal error occurred: failed calling webhook "validation.webhook.provisioners.karpenter.sh"`_ OR _`Failed calling webhook “defaulting.webhook.karpenter.sh”`_.  A sample error from the Github Actions logs is shown below.
 
@@ -147,6 +146,8 @@ kubectl delete mutatingwebhookconfigurations defaulting.webhook.karpenter.sh
 
 Note that you will need to generate access keys for the `eksadmin1` user, create a new AWS profile locally and run the commands above with the new profile
 
-2. If you run into issues while trying to destroy the EKS cluster via the pipeline, go to the AWS console and attempt to destroy the EKS VPC manually. It is most likely that there are resource dependencies preventing the destruction via terraform. Go ahead and delete them and retry the pipeline _Terraform Destroy EKS_ workflow to delete the entire infrastructure. Some resources are spun up outside of Terraform such as Ingress load balancers or it's attached security groups and could lead to dependencies when destroying the resources. See the sample error screenshot below
+2. If you run into issues while trying to destroy the EKS cluster via the pipeline, go to the AWS console and attempt to destroy the EKS VPC manually. It is most likely that there are resource dependencies preventing the destruction via terraform. 
+
+Go ahead and delete them and retry the pipeline _Terraform Destroy EKS_ workflow to delete the entire infrastructure. Some resources are spun up outside of Terraform such as Ingress load balancers or it's attached security groups and could lead to dependencies when destroying the resources. See the sample error screenshot below
 
 <img alt="Karpenter error" src="https://github.com/yemisprojects/eks-infra/blob/main/images/Destroy%20terraform%20error.png">
