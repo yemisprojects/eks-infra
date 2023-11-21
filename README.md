@@ -129,7 +129,15 @@ Destroy the infrastructure after you have completed all the steps regarding impl
 - To destroy the EKS Cluster, Click _Terraform Destroy EKS_ workflow -> _Run workflow_ on the main branch
 - To destroy the Jenkins pipeline, Click _Terraform Destroy Jenkins Pipeline_ workflow -> _Run workflow_ on the main branch
 - A screenshot is shown below for reference
-<img alt="Karpenter error" src="https://github.com/yemisprojects/eks-infra/blob/main/images/Destroy%20eks%20cluster.png">
+<img alt="Destroy EKS cluster" src="https://github.com/yemisprojects/eks-infra/blob/main/images/Destroy%20eks%20cluster.png">
+
+#### Delete S3 backend and DynamDb
+
+The IAM role used by the pipeline, S3 backend and DynamoDb resources will also need to destroyed as well. Run the command below and you are done
+
+```sh
+cd github_setup && terraform destroy -auto-approve
+```
 
 ## Possible issues
 1. The most re-occuring issue i faced running the project locally or via Github actions was with creating Karpenter's provisioner resource. Errors encountered include _`Internal error occurred: failed calling webhook "validation.webhook.provisioners.karpenter.sh"`_ OR _`Failed calling webhook “defaulting.webhook.karpenter.sh”`_.  A sample error from the Github Actions logs is shown below.
