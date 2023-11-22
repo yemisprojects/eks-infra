@@ -97,17 +97,21 @@ kubectl get nodes
 ```
 
 ## Verify Jenkins access
-Jenkins should be setup to be scalable and highly available but a single instance is used here for simplicity. Review the [documentation](https://www.jenkins.io/doc/book/scaling/architecting-for-scale/) for more information if needed. Goto the `http://x.x.x.x:8080` where _x.x.x.x_ is it EC2 public IP. Configuring Jenkins is detailed extensively in the [eks-app](https://github.com/yemisprojects/eks-app) repo.
+Jenkins should be setup to be scalable and highly available but a single instance is used here for simplicity. Review the [documentation](https://www.jenkins.io/doc/book/scaling/architecting-for-scale/) for more information if needed. Goto the `http://x.x.x.x:8080` where _x.x.x.x_ is Jenkins EC2 public IP. Configuring Jenkins is detailed extensively in the [eks-app](https://github.com/yemisprojects/eks-app) repo.
 
 ## How to access Grafanna
-An AWS load balancer controller was installed and used to expose the grafana service using the domain name you provided earlier. Go to your browser, provide the domain name and login with the default credentials below. Also ensure a CNAME record has been added in your domain to complete access. Instructions for AWS Route53 is found [here](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-creating.html).
+- An AWS load balancer controller was installed and a load balancer was created to expose the grafana service using the domain name you provided earlier. The name of the new load balancer is `prometheus-ingress`
+<img alt="Grafana Load balancer" src="https://github.com/yemisprojects/eks-app/blob/main/images/Loadbalancers-app-grafana.png">
 
+- Get the load balancer name and create a CNAME record in your domain. The screenshot below shows an example when using route53. Instructions for AWS Route53 can be found [here](https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-creating.html).
+<img alt="Route53 record" src="https://github.com/yemisprojects/eks-app/blob/main/images/R53_record.png">
+
+- Go to your browser, type in your chosen domain name and login with the default credentials below. to access the Grafana console. 
 ```
 Username: admin
 Password: prom-operator
 ```
-
-You can [import](https://grafana.com/docs/grafana/latest/dashboards/manage-dashboards/#import-a-dashboard) a Kubernetes Cluster Dashboard using this ID: `1860`
+- You can [import](https://grafana.com/docs/grafana/latest/dashboards/manage-dashboards/#import-a-dashboard) a Kubernetes Cluster Dashboard using this ID: `1860`
 
 ## How to access Argo CD UI 
 You can use port forwarding to [access Argo CD UI](https://argo-cd.readthedocs.io/en/stable/getting_started/#3-access-the-argo-cd-api-server) for initial configuration
