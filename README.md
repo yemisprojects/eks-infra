@@ -34,7 +34,7 @@ As a first step, fork this repository and run the commands below. Note down the 
 
 ```sh
 cd github_setup && terraform init
-terraform fmt && terraform apply -auto-approve
+terraform apply -auto-approve
 ```
 
 Using the command above, terraform creates the following resources: 
