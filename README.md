@@ -8,7 +8,15 @@ This repository contains the terraform code and github workflow used to automate
 
 <img alt="GitHub Actions CICD for Terraform" src="https://github.com/yemisprojects/eks-infra/blob/main/images/architecture/architecture%20used.png">
 
-Github Actions integrates seamlessly with Github and there is a wide variety of reusable actions from the [github marketplace](https://github.com/marketplace) to adopt. Pipeline workflows are written in YAML and with Github-Hosted runners its easy to get started with minimal operational overhead. Terrafom is open source, cloud agnostic with a large community contributing to it. It also provides the flexibility to work with many providers (cloud and non-cloud) and a wide variety of modules you can reuse. This makes it a versatile IaC tool. Checkov is a static code analysis tool for infrastructure as code (IaC) and also a software composition analysis (SCA) tool for images and open source packages. It detects security and compliance misconfigurations. Each of these tools have been used to automate infrastructure deployment for this project
+The architecture above represents the complete solution architecture for the EKS DevSecOps project. The rest of this documentation delves into the details of the Infrastructure pipeline portion of the solution above.
+
+<h2 align="center">Infrastructure pipeline tools</h1>
+
+The following tools below have been used to automate the infrastructure deployment for this project.
+
+- [Github Actions](https://docs.github.com/en/actions) integrates seamlessly with Github and there is a wide variety of reusable actions from the [github marketplace](https://github.com/marketplace) to adopt. Pipeline workflows are written in YAML and with Github-Hosted runners its easy to get started with minimal operational overhead. 
+- [Terrafom](https://www.terraform.io) is open source, cloud agnostic with a large community contributing to it. It also provides the flexibility to work with many providers (cloud and non-cloud) and a wide variety of modules you can reuse. This makes it a versatile IaC tool. 
+- [Checkov](https://www.checkov.io) is a static code analysis tool for infrastructure as code (IaC) and also a software composition analysis (SCA) tool for images and open source packages. It detects security and compliance misconfigurations. 
 
 # Prerequisites
 
