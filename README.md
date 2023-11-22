@@ -45,7 +45,7 @@ Using the command above, terraform creates the following resources:
 
 2. **IAM role utilized by Github to authenticate to AWS**: 
 
-    Using [OpenID Connect (OIDC)](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services) an IAM Role will be used by the pipeline to authenticate and carry out actions in your AWS account. At a minimum, the role requires permission to the S3 buckets, dynamoDB tables and to deploy the desired resources. Using an IAM role versus AWS access Key saves you the burden of rotating long lived secret keys. See this [AWS blog](https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/) for more information. Note that, admin permissions have been used for simplicity in this project. In a real time scenario, you should adhere to the principle of least privilege.
+    Using [OpenID Connect (OIDC)](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services) an IAM Role will be used by the pipeline to authenticate and carry out actions in your AWS account. At a minimum, the role requires permission to the S3 buckets, dynamoDB tables and to deploy the desired resources. Using an IAM role versus AWS access keys saves you the burden of rotating long-term credentials. See this [AWS blog](https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/) for more information. Note that, admin permissions have been used for simplicity in this project. In a real time scenario, you should adhere to the principle of least privilege.
 
 #### GitHub Secrets
 
@@ -65,12 +65,11 @@ Instructions to add the secrets to the repository can be found [here](https://do
                                             <h4 align="center">Github Workflow</h4>
 
 1. Fork this repo and use the steps in the previous sections to update your github secrets
-2. **_Required_**: Update value of the `grafana_domain_name` variable in `eks/dev/variables.tf` to your domain name
-3. You can push your change directly to the main branch. However, to see the comments on the PR by github-actions bot and terraform plan from a PR (pull request) perspective i suggest you create a new branch and check in the Terraform code with your change. See sample [here](https://github.com/yemisprojects/eks-infra/blob/main/images/archiecture_github_actions/PR%20comment%20Github%20action.png). Also one would typically not merge changes directly to the main branch
+2. **_Required_**: Update value of the `grafana_domain_name` variable in `eks/dev/variables.tf` to your desired domain name as this will be used to access Grafana dashboard at a later step.
+3. You can push your change directly to the main branch. However, to see the terraform plan posted by github-actions bot from a PR (pull request) perspective i suggest you create a new branch and check in the Terraform code with your change. See sample [here](https://github.com/yemisprojects/eks-infra/blob/main/images/archiecture_github_actions/PR%20comment%20Github%20action.png). Also one would typically not merge changes directly to the main branch
 4. Create a Pull Request (PR) in GitHub once you're ready to merge your code.
-5. 
-    - A GitHub Actions workflow will trigger to ensure your code is well formatted and validated. A Terraform plan will also run to generate a preview of the changes that will happen in your AWS account and displayed as a comment on the PR. 
-    - Concurrently Checkov will scan your Terraform configurations for security misconfigurations. The results of the latter can be found in the `Security` tab -> `Code Scanning` section of your repository. Note, enforcement has been disabled in the workflow to allow all checks to pass. Sample code scan results are shown in the screenshot below.
+5. A GitHub Actions workflow will trigger to ensure your code is well formatted and validated. A Terraform plan will also run to generate a preview of the changes that will happen in your AWS account and displayed as a comment on the PR. 
+    Concurrently Checkov will scan your Terraform configurations for security misconfigurations. The results of the latter can be found in the `Security` tab -> `Code Scanning` section of your repository. Note, enforcement has been disabled in the workflow to allow all checks to pass. Sample code scan results are shown in the screenshot below.
 6. Once the PR is appropriately reviewed, the PR can be merged into your main branch.
 7. After merge, another job will trigger from the main branch and deploy the infrastructure using Terraform. Generally, creating the cluster can take up to 10mins.
 
