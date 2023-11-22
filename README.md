@@ -78,7 +78,7 @@ Instructions to add the secrets to the repository can be found [here](https://do
 
 <h4>Resources deployed</h4>
 
-Below is a list of key resources deployed via the pipeline. For a complete list of all resources, see the [doc for terraform](https://github.com/yemisprojects/eks-infra/tree/main/eks_infra/dev#readme) within this repo.
+Below is a list of key resources deployed via the pipeline by default in us-east-1. For a complete list of all resources, see the [terraform docs](https://github.com/yemisprojects/eks-infra/tree/main/eks_infra/dev#readme) for the code within this repo.
 
 1. Jenkins running on EC2 accessible via SSM
 2. EKS Cluster with 1 managed node group
@@ -89,9 +89,10 @@ Below is a list of key resources deployed via the pipeline. For a complete list 
 7. AWS Application Load balancer Controller
 
 ## Verify EKS access
-Confirm the cluster is created successfully and you can access it with these commands. Replace `eksadmin1` with the AWS CLI profile created for the `eksadmin1` user
+Confirm the cluster is created successfully and you can access it with these commands. Go to the AWS console, and generate access keys for the newly created `eksadmin1` IAM user. Run the commands below to configure your AWS CLI profile and authenticate to the EKS cluster
 ```sh
-aws eks update-kubeconfig --region us-west-2 --name eks-poc --profile <eksadmin1>
+aws configure --profile eksadmin1
+aws eks update-kubeconfig --region us-east-1 --name eks-poc --profile eksadmin1
 kubectl get nodes
 ```
 
