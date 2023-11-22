@@ -156,7 +156,7 @@ cd github_setup && terraform destroy -auto-approve
 
 <img alt="Karpenter error" src="https://github.com/yemisprojects/eks-infra/blob/main/images/Karpenter%20error.png">
 
-- These errors are [officially documented](https://karpenter.sh/preview/troubleshooting/#webhooks) as _"a bug in Argo CD’s upgrade workflow where webhooks are leaked"_. The solution is to simply delete the webhooks and rerun terraform apply or rerun the workflow. The issue will most likely not be encountered in karpenter v0.32.x (v1beta1) as this solution used v1alpha5 api version for the karpenter provisioner. You can reattempt this project with the newest release
+    These errors are [officially documented](https://karpenter.sh/preview/troubleshooting/#webhooks) as _"a bug in Argo CD’s upgrade workflow where webhooks are leaked"_. The solution is to simply delete the webhooks and rerun terraform apply or rerun the workflow. The issue will most likely not be encountered in karpenter v0.32.x (v1beta1) as this solution used v1alpha5 api version for the karpenter provisioner. You can reattempt this project with the newest release
 
     Note that you will need to generate access keys for the `eksadmin1` user, create a new AWS profile locally and run the commands above with the new profile
 
@@ -168,6 +168,6 @@ kubectl delete mutatingwebhookconfigurations defaulting.webhook.karpenter.sh
 
 2. If you run into issues while trying to destroy the EKS cluster via the pipeline, go to the AWS console and attempt to destroy the EKS VPC manually. It is most likely that there are resource dependencies preventing the destruction via terraform. 
 
-    - Try to delete a few resources listed and retry the pipeline _Terraform Destroy EKS_ workflow to delete the entire infrastructure. Some resources are spun up outside of Terraform such as the Ingress load balancers or it's attached security groups and could lead to dependencies violations when destroying the resources. See the sample error screenshot below.
+    Try to delete a few resources listed and retry the pipeline _Terraform Destroy EKS_ workflow to delete the entire infrastructure. Some resources are spun up outside of Terraform such as the Ingress load balancers or it's attached security groups and could lead to dependencies violations when destroying the resources. See the sample error screenshot below.
 
 <img alt="Karpenter error" src="https://github.com/yemisprojects/eks-infra/blob/main/images/Destroy%20terraform%20error.png">
