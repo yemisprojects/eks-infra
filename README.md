@@ -45,7 +45,7 @@ Using the command above, terraform creates the following resources:
 
 2. **IAM role utilized by Github to authenticate to AWS**: 
 
-    Using [OpenID Connect (OIDC)](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services) an IAM Role will be used by the pipeline to authenticate and carry out actions in your AWS account. At a minimum, the role requires permission to the S3 buckets, dynamoDB tables and to deploy the desired resources. See this [AWS blog](https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/) for more information. Note that, admin permissions have been used for simplicity in this project. In a real time scenario, you should adhere to the principle of least privilege
+    Using [OpenID Connect (OIDC)](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services) an IAM Role will be used by the pipeline to authenticate and carry out actions in your AWS account. At a minimum, the role requires permission to the S3 buckets, dynamoDB tables and to deploy the desired resources. Using an IAM role versus AWS access Key saves you the burden of rotating long lived secret keys. See this [AWS blog](https://aws.amazon.com/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/) for more information. Note that, admin permissions have been used for simplicity in this project. In a real time scenario, you should adhere to the principle of least privilege.
 
 #### GitHub Secrets
 
