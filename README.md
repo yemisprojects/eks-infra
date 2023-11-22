@@ -158,7 +158,7 @@ cd github_setup && terraform destroy -auto-approve
 
 - These errors are [officially documented](https://karpenter.sh/preview/troubleshooting/#webhooks) as _"a bug in Argo CD’s upgrade workflow where webhooks are leaked"_. The solution is to simply delete the webhooks and rerun terraform apply or rerun the workflow. The issue will most likely not be encountered in karpenter v0.32.x (v1beta1) as this solution used v1alpha5 api version for the karpenter provisioner. You can reattempt this project with the newest release
 
-Note that you will need to generate access keys for the `eksadmin1` user, create a new AWS profile locally and run the commands above with the new profile
+    Note that you will need to generate access keys for the `eksadmin1` user, create a new AWS profile locally and run the commands above with the new profile
 
 ```sh
 kubectl delete mutatingwebhookconfigurations defaulting.webhook.provisioners.karpenter.sh
