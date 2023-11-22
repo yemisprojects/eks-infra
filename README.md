@@ -135,11 +135,11 @@ kubectl logs -f -n karpenter -l app.kubernetes.io/name=karpenter -c controller
 
 ## Destroy Infrastructure
 
-Destroy the infrastructure after you have completed all the steps regarding implementing the application pipeline in the [eks-app](https://github.com/yemisprojects/eks-app) repo. To destroy the infrastructure via the Github actions pipeline. Follow these steps
+Destroy the infrastructure after you have completed all the steps to implement the application pipeline in the [eks-app](https://github.com/yemisprojects/eks-app) repo. To destroy the infrastructure via the Github actions pipeline. Follow these steps
 
 - Go to the _Actions_ tab within this repo
-- To destroy the EKS Cluster, Click _Terraform Destroy EKS_ workflow -> _Run workflow_ on the main branch
-- To destroy the Jenkins pipeline, Click _Terraform Destroy Jenkins Pipeline_ workflow -> _Run workflow_ on the main branch
+- To destroy the EKS Cluster, Click `Terraform Destroy EKS` workflow -> `Run workflow` on the main branch
+- To destroy the Jenkins pipeline, Click `Terraform Destroy Jenkins Pipeline` workflow -> `Run workflow` on the main branch
 - A screenshot is shown below for reference
 <img alt="Destroy EKS cluster" src="https://github.com/yemisprojects/eks-infra/blob/main/images/Destroy%20eks%20cluster.png">
 
