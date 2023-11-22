@@ -155,6 +155,7 @@ cd github_setup && terraform destroy -auto-approve
 1. The most re-occuring issue i faced running the project locally or via Github actions was with creating Karpenter's provisioner resource. Errors encountered include _`Internal error occurred: failed calling webhook "validation.webhook.provisioners.karpenter.sh"`_ OR _`Failed calling webhook “defaulting.webhook.karpenter.sh”`_.  A sample error from the Github Actions logs is shown below.
 
 <img alt="Karpenter error" src="https://github.com/yemisprojects/eks-infra/blob/main/images/Karpenter%20error.png">
+    
     These errors are [officially documented](https://karpenter.sh/preview/troubleshooting/#webhooks) as _a bug in Argo CD’s upgrade workflow where webhooks are leaked_. The solution is to simply delete the webhooks and rerun terraform apply or rerun the workflow. The issue will most likely not be encountered in karpenter v0.32.x (v1beta1) as this solution used v1alpha5 api version for the karpenter provisioner. You can reattempt this project with the newest release.
 
     Note that you will need to generate access keys for the `eksadmin1` user, create a new AWS profile locally and run the commands above with the new profile
