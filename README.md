@@ -12,7 +12,7 @@ The architecture above represents the complete solution architecture for the EKS
 
 <h2 align="center">Infrastructure pipeline tools</h1>
 
-The following tools below have been used to automate the infrastructure deployment for this project. The pipeline workflow is described further [down below](https://github.com/yemisprojects/eks-infra#how-to-deploy-resources-via-github-actions) on this page
+The following tools below have been used to automate the infrastructure deployment for this project. The pipeline workflow is described further [down below](https://github.com/yemisprojects/eks-infra#github-workflow) on this page
 
 - [Github Actions](https://docs.github.com/en/actions) integrates seamlessly with Github and there is a wide variety of reusable actions from the [github marketplace](https://github.com/marketplace) to adopt. Pipeline workflows are written in YAML and with Github-Hosted runners its easy to get started with minimal operational overhead. 
 - [Terrafom](https://www.terraform.io) is open source, cloud agnostic with a large community contributing to it. It also provides the flexibility to work with many providers (cloud and non-cloud) and a wide variety of modules you can reuse. This makes it a versatile IaC tool. 
